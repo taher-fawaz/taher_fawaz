@@ -1,0 +1,275 @@
+@import 'tailwindcss';
+
+/* Dark mode follows the data-theme attribute set before paint (see ThemeScript). */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* ───────────── Design tokens ───────────── */
+:root {
+  --paper: #f6f1e7;
+  --paper-2: #ede6d6;
+  --ink: #11171a;
+  --muted: #4a5654;
+  --forest: #1f4d3a;
+  --forest-deep: #173a2b;
+  --gold: #b38a2e;
+  --gold-lt: #d4ac55;
+  --night: #0e1512;
+  --night-ink: #ede7d8;
+  --night-muted: #b9c3bd;
+  --field: #1f4d3a;
+  --field-ink: #f6f1e7;
+  --field-muted: rgb(246 241 231 / 0.82);
+  --field-rule: rgb(246 241 231 / 0.28);
+  --link: #1f4d3a;
+  --mark: #7a5c14; /* gold darkened to pass 4.5:1 on paper for small labels */
+  --rule: rgb(17 23 26 / 0.16);
+  --rule-strong: #11171a;
+  --focus: #1f4d3a;
+  --error: #9b2c20;
+  --success: #1f4d3a;
+
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --dur-fast: 150ms;
+  --dur-base: 220ms;
+
+  /* Typography roles; Arabic overrides below. */
+  --font-display-role: var(--font-fraunces), Georgia, serif;
+  --font-ui-role: var(--font-inter), system-ui, sans-serif;
+  --body-size: 1.0625rem;
+  --body-leading: 1.6;
+  --display-leading: 1.04;
+  --display-tracking: -0.022em;
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --paper: #0e1512;
+  --paper-2: #15201b;
+  --ink: #ede7d8;
+  --muted: #a5b0aa;
+  --field: #14352a;
+  /* Night surfaces must stay distinguishable from the dark page background. */
+  --night: #18251f;
+  --link: #7dbe9c;
+  --mark: #d4ac55;
+  --gold: #d4ac55;
+  --rule: rgb(237 231 216 / 0.18);
+  --rule-strong: #ede7d8;
+  --focus: #d4ac55;
+  --error: #f0897c;
+  --success: #7dbe9c;
+  color-scheme: dark;
+}
+
+html[lang='ar'] {
+  --font-display-role: var(--font-amiri), var(--font-fraunces), var(--font-plex-ar), serif;
+  --font-ui-role: var(--font-plex-ar), var(--font-inter), system-ui, sans-serif;
+  --body-size: 1.125rem;
+  --body-leading: 1.85;
+  --display-leading: 1.35;
+  --display-tracking: 0;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-forest: var(--forest);
+  --color-gold: var(--gold);
+  --color-gold-lt: var(--gold-lt);
+  --color-night: var(--night);
+  --color-night-ink: var(--night-ink);
+  --color-night-muted: var(--night-muted);
+  --color-field: var(--field);
+  --color-field-ink: var(--field-ink);
+  --color-field-muted: var(--field-muted);
+  --color-field-rule: var(--field-rule);
+  --color-link: var(--link);
+  --color-mark: var(--mark);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-error: var(--error);
+  --font-display: var(--font-display-role);
+  --font-sans: var(--font-ui-role);
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-ar-display: var(--font-amiri), var(--font-fraunces), var(--font-plex-ar), serif;
+  --font-ar: var(--font-plex-ar), system-ui, sans-serif;
+  --ease-out: var(--ease-out);
+}
+
+/* ───────────── Base ───────────── */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5.5rem;
+    overflow-x: clip;
+    scrollbar-color: var(--muted) var(--paper);
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ui-role);
+    font-size: var(--body-size);
+    line-height: var(--body-leading);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display-role);
+    font-weight: 500;
+    text-wrap: balance;
+  }
+  html[lang='ar'] :is(h1, h2, h3) { font-weight: 700; }
+  p, li, dd { text-wrap: pretty; }
+  ::selection { background: var(--forest); color: #f6f1e7; }
+  [data-theme='dark'] ::selection { background: var(--gold-lt); color: #0e1512; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+  .on-field :focus-visible, .on-night :focus-visible { outline-color: var(--gold-lt); }
+  /* Latin technical terms, dates and code keep their own direction inside Arabic text. */
+  bdi, .ltr { unicode-bidi: isolate; }
+}
+
+/* ───────────── Components (small, repeated patterns only) ───────────── */
+@layer components {
+  .wrap { margin-inline: auto; max-width: 75rem; padding-inline: clamp(1rem, 4vw, 2rem); }
+
+  .display-1 {
+    font-size: clamp(2.6rem, 6.2vw, 5.25rem);
+    line-height: var(--display-leading);
+    letter-spacing: var(--display-tracking);
+  }
+  .display-2 {
+    font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+    line-height: calc(var(--display-leading) + 0.02);
+    letter-spacing: var(--display-tracking);
+  }
+  .section-title {
+    font-size: clamp(1.85rem, 3.6vw, 2.75rem);
+    line-height: 1.14;
+    letter-spacing: -0.015em;
+  }
+  html[lang='ar'] .section-title { line-height: 1.4; letter-spacing: 0; }
+
+  .meta { font-family: var(--font-jetbrains), ui-monospace, monospace; font-size: 0.8em; direction: ltr; unicode-bidi: isolate; font-variant-numeric: tabular-nums; }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    font: 500 0.75rem/1 var(--font-ui-role);
+    padding: 0.35rem 0.5rem; border: 1px solid currentColor; border-radius: 2px; white-space: nowrap;
+  }
+  html[lang='ar'] .chip { font-size: 0.8rem; }
+  .chip-cv { color: var(--link); }
+  .chip-mark { color: var(--mark); }
+  .on-field .chip, .on-night .chip { color: var(--gold-lt); }
+
+  .tag {
+    font: 400 0.75rem/1.2 var(--font-jetbrains), ui-monospace, monospace;
+    direction: ltr; border: 1px solid var(--rule); padding: 0.3rem 0.5rem; color: var(--muted);
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.6rem; min-height: 3rem; padding-inline: 1.4rem;
+    border-radius: 2px; font-weight: 500; font-size: 1rem; text-decoration: none; cursor: pointer;
+    background: var(--forest); color: #f6f1e7;
+    transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  }
+  .btn:hover { background: var(--forest-deep); }
+  .btn:active { transform: scale(0.96); }
+  [data-theme='dark'] .btn { background: var(--gold-lt); color: #0e1512; }
+  [data-theme='dark'] .btn:hover { background: #e4be6a; }
+  .btn-on-field, [data-theme='dark'] .btn-on-field { background: var(--field-ink); color: var(--forest); }
+  .btn-on-field:hover, [data-theme='dark'] .btn-on-field:hover { background: #fff; }
+  .btn-on-night, [data-theme='dark'] .btn-on-night { background: var(--gold-lt); color: #0e1512; }
+  .btn-on-night:hover, [data-theme='dark'] .btn-on-night:hover { background: #e4be6a; }
+  .btn[disabled] { opacity: 0.65; cursor: progress; }
+
+  .tlink {
+    display: inline-flex; align-items: center; gap: 0.5rem; color: var(--link); font-weight: 500;
+    text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 2px; text-underline-offset: 0.4em;
+    transition: text-decoration-color var(--dur-fast) var(--ease-out);
+  }
+  .tlink:hover { text-decoration-color: currentColor; }
+  .on-field .tlink, .on-night .tlink { color: var(--field-ink); }
+
+  /* Directional icon: points “forward” in the reading direction, nudges on hover of its parent link. */
+  .icon-fwd { transition: translate var(--dur-fast) var(--ease-out); }
+  html[dir='rtl'] .icon-fwd { scale: -1 1; }
+  html[dir='rtl'] .icon-back { scale: -1 1; }
+  :is(a, button):is(:hover, :focus-visible) .icon-fwd { translate: 3px 0; }
+  html[dir='rtl'] :is(a, button):is(:hover, :focus-visible) .icon-fwd { translate: -3px 0; }
+
+  .tool-btn {
+    display: inline-flex; align-items: center; justify-content: center; min-width: 2.75rem; height: 2.75rem;
+    border: 1px solid var(--rule); border-radius: 2px; font-size: 0.9rem; cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  }
+  .tool-btn:hover { border-color: var(--forest); background: var(--paper-2); }
+  .tool-btn:active { transform: scale(0.96); }
+
+  /* Gold underline grows from the reading-start edge. */
+  .nav-link {
+    padding-block: 0.5rem; text-decoration: none;
+    background: linear-gradient(var(--gold), var(--gold)) left bottom / 0 2px no-repeat;
+    transition: background-size var(--dur-base) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  html[dir='rtl'] .nav-link { background-position: right bottom; }
+  .nav-link:hover, .nav-link:focus-visible, .nav-link[aria-current='page'] { background-size: 100% 2px; }
+
+  .rule-top { border-top: 1px solid var(--rule); }
+  .rule-strong { border-top: 1px solid var(--rule-strong); }
+
+  .plate { position: relative; overflow: hidden; background: var(--paper-2); outline: 1px solid var(--rule); outline-offset: -1px; }
+  .plate-art { transition: scale 400ms var(--ease-out); }
+  a:hover .plate-art, a:focus-visible .plate-art { scale: 1.025; }
+  a:hover .plate, a:focus-visible .plate { outline-color: var(--forest); }
+
+  /* Orbit diagram: the three roles. Hovering or focusing a role anywhere in the hero lights its orbit. */
+  .orbit-ring { fill: none; stroke: var(--field-rule); stroke-width: 1; transition: stroke var(--dur-base) var(--ease-out), stroke-width var(--dur-base) var(--ease-out); }
+  .orbit-body circle { fill: var(--field); stroke: var(--gold-lt); stroke-width: 1.5; transition: r var(--dur-base) var(--ease-out), fill var(--dur-base) var(--ease-out); }
+  .orbit-body text { fill: var(--field-ink); font: 500 15px var(--font-inter), sans-serif; text-anchor: middle; paint-order: stroke; stroke: var(--field); stroke-width: 6px; }
+  html[lang='ar'] .orbit-body text { font: 600 19px var(--font-plex-ar), sans-serif; }
+  .hero:has([data-role='engineer']:is(:hover, :focus-visible)) .ring-engineer,
+  .hero:has([data-role='educator']:is(:hover, :focus-visible)) .ring-educator,
+  .hero:has([data-role='builder']:is(:hover, :focus-visible)) .ring-builder { stroke: var(--gold-lt); stroke-width: 1.5; }
+  .hero:has([data-role='engineer']:is(:hover, :focus-visible)) .body-engineer circle,
+  .hero:has([data-role='educator']:is(:hover, :focus-visible)) .body-educator circle,
+  .hero:has([data-role='builder']:is(:hover, :focus-visible)) .body-builder circle { r: 13px; fill: var(--gold-lt); }
+
+  /* Long-form reading */
+  .prose { max-width: 68ch; }
+  .prose > * + * { margin-top: 1.1em; }
+  .prose h2 { font-size: 1.75rem; line-height: 1.25; margin-top: 1.8em; }
+  .prose h3 { font-size: 1.35rem; margin-top: 1.5em; }
+  .prose figure { margin-block: 2em; }
+  .prose figure:has(> img) figcaption { margin-top: 0.6em; font-family: var(--font-inter), var(--font-plex-ar), sans-serif; font-size: 0.875rem; line-height: 1.6; color: var(--muted); }
+  .prose-ar figure:has(> img) figcaption { font-family: var(--font-plex-ar), var(--font-inter), sans-serif; font-size: 0.95rem; }
+  .prose a { color: var(--link); text-decoration: underline; text-underline-offset: 0.25em; }
+  .prose blockquote { border-block: 1px solid var(--rule); padding-block: 0.75em; font-family: var(--font-display-role); font-size: 1.2em; }
+  .prose code:not(pre code) { font-family: var(--font-jetbrains), monospace; font-size: 0.88em; background: var(--paper-2); padding: 0.1em 0.3em; direction: ltr; unicode-bidi: isolate; }
+  .prose pre { direction: ltr; text-align: left; background: var(--paper-2); border: 1px solid var(--rule); padding: 1rem; overflow-x: auto; font: 400 0.875rem/1.6 var(--font-jetbrains), monospace; }
+  .prose ul, .prose ol { padding-inline-start: 1.25em; }
+  .prose ul { list-style: disc; } .prose ol { list-style: decimal; }
+  .prose-ar { font-family: var(--font-plex-ar), var(--font-inter), sans-serif; font-size: 1.1875rem; line-height: 1.95; }
+  .prose-ar :is(h2, h3) { font-family: var(--font-amiri), var(--font-fraunces), var(--font-plex-ar), serif; font-weight: 700; line-height: 1.5; }
+  .prose-ar blockquote { font-family: var(--font-amiri), var(--font-fraunces), serif; font-size: 1.35em; }
+  .prose-en { font-family: var(--font-inter), sans-serif; font-size: 1.125rem; line-height: 1.7; }
+  .prose-en :is(h2, h3), .prose-en blockquote { font-family: var(--font-fraunces), serif; font-weight: 500; }
+}
+
+/* ───────────── Hero entrance (the page's one orchestrated moment) ─────────────
+   Pure CSS so it starts on first paint and never waits for JavaScript: waiting for
+   the GSAP bundle delayed LCP to ~6.8s on throttled mobile. Items rise in sequence
+   (--i sets the order), rings draw via pathLength="1", the three bodies settle. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-hero-item] { animation: hero-rise 0.8s var(--ease-out) both; animation-delay: calc(var(--i, 0) * 90ms); }
+  .orbit-ring { stroke-dasharray: 1; animation: ring-draw 1.2s cubic-bezier(0.65, 0, 0.35, 1) both; animation-delay: calc(150ms + var(--i, 0) * 120ms); }
+  .orbit-bodies { transform-box: view-box; transform-origin: 280px 280px; animation: bodies-settle 1.3s var(--ease-out) 0.4s both; }
+}
+@keyframes hero-rise { from { opacity: 0; translate: 0 16px; } }
+@keyframes ring-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes bodies-settle { from { opacity: 0; rotate: -18deg; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

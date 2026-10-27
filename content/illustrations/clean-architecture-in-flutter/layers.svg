@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img">
+  <title>Layers and dependency direction: UI uses Domain; Data implements Domain</title>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><path d="M0 0L10 5L0 10z" fill="#11171a"/></marker>
+  </defs>
+  <rect width="1200" height="520" fill="#f6f1e7"/>
+  <g font-family="'JetBrains Mono', Consolas, 'Courier New', monospace">
+    <rect x="50" y="60" width="300" height="400" fill="#f6f1e7" stroke="#11171a" stroke-width="2"/>
+    <rect x="50" y="60" width="300" height="64" fill="#ede6d6" stroke="#11171a" stroke-width="2"/>
+    <text x="200" y="102" font-size="26" font-weight="700" text-anchor="middle" fill="#11171a">UI</text>
+    <rect x="76" y="156" width="248" height="72" fill="#ede6d6" stroke="#11171a" stroke-opacity="0.35"/>
+    <text x="200" y="199" font-size="17" text-anchor="middle" fill="#11171a">ProductsScreen</text>
+    <rect x="76" y="252" width="248" height="72" fill="#ede6d6" stroke="#11171a" stroke-opacity="0.35"/>
+    <text x="200" y="295" font-size="17" text-anchor="middle" fill="#11171a">ProductsViewModel</text>
+
+    <rect x="450" y="60" width="300" height="400" fill="#f6f1e7" stroke="#1f4d3a" stroke-width="3"/>
+    <rect x="450" y="60" width="300" height="64" fill="#1f4d3a" stroke="#1f4d3a" stroke-width="3"/>
+    <text x="600" y="102" font-size="26" font-weight="700" text-anchor="middle" fill="#f6f1e7">Domain</text>
+    <rect x="476" y="156" width="248" height="72" fill="#ede6d6" stroke="#1f4d3a" stroke-opacity="0.5"/>
+    <text x="600" y="199" font-size="17" text-anchor="middle" fill="#11171a">Product</text>
+    <rect x="476" y="252" width="248" height="72" fill="#ede6d6" stroke="#1f4d3a" stroke-opacity="0.5"/>
+    <text x="600" y="287" font-size="17" text-anchor="middle" fill="#11171a">ProductRepository</text>
+    <text x="600" y="311" font-size="14" text-anchor="middle" fill="#4a5654">interface</text>
+
+    <rect x="850" y="60" width="300" height="400" fill="#f6f1e7" stroke="#11171a" stroke-width="2"/>
+    <rect x="850" y="60" width="300" height="64" fill="#ede6d6" stroke="#11171a" stroke-width="2"/>
+    <text x="1000" y="102" font-size="26" font-weight="700" text-anchor="middle" fill="#11171a">Data</text>
+    <rect x="876" y="156" width="248" height="72" fill="#ede6d6" stroke="#11171a" stroke-opacity="0.35"/>
+    <text x="1000" y="199" font-size="16" text-anchor="middle" fill="#11171a">ProductRepositoryImpl</text>
+    <rect x="876" y="252" width="248" height="72" fill="#ede6d6" stroke="#11171a" stroke-opacity="0.35"/>
+    <text x="1000" y="295" font-size="17" text-anchor="middle" fill="#11171a">ProductApiService</text>
+    <rect x="876" y="348" width="248" height="72" fill="#ede6d6" stroke="#11171a" stroke-opacity="0.35"/>
+    <text x="1000" y="391" font-size="17" text-anchor="middle" fill="#11171a">ProductDto</text>
+
+    <path d="M352 260H446" stroke="#11171a" stroke-width="3" marker-end="url(#a)"/>
+    <text x="400" y="244" font-size="15" text-anchor="middle" fill="#11171a">uses</text>
+    <path d="M848 260H754" stroke="#11171a" stroke-width="3" marker-end="url(#a)"/>
+    <text x="800" y="244" font-size="15" text-anchor="middle" fill="#11171a">implements</text>
+  </g>
+</svg>

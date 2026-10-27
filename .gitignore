@@ -1,0 +1,33 @@
+# dependencies and build output
+node_modules/
+.next/
+out/
+build/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# environment files: only .env.example is tracked
+.env
+.env.*
+!.env.example
+
+# deployment and tooling state
+.vercel
+.sanity
+.claude/settings.local.json
+.claude/*.local.*
+AGENTS.md
+
+# keys and certificates
+*.pem
+*.key
+
+# one-off import scripts (they read a write token from .env.local)
+scripts/import-*.ts
+
+# logs and OS files
+npm-debug.log*
+*.log
+.DS_Store
+Thumbs.db
