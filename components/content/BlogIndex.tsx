@@ -3,7 +3,7 @@ import { articlesForLocale, getArticles, getCategories } from '@/lib/content'
 import { tr } from '@/lib/content/localize'
 import { localePath, type Locale } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/dictionaries'
-import { PageHeader } from '@/components/ui/primitives'
+import { EmptyState, PageHeader } from '@/components/ui/primitives'
 import { Reveal } from '@/components/motion/Reveal'
 import { ArticleList } from './ArticleList'
 
@@ -40,7 +40,12 @@ export async function BlogIndex({ locale, category }: { locale: Locale; category
           <ArticleList items={list} locale={locale} />
         </Reveal>
       ) : (
-        <p className="rule-strong pt-8 text-muted">{category ? d.blog.empty : d.blog.none}</p>
+        <EmptyState
+          title={category ? d.empty.category : d.empty.articles}
+          actions={category ? <Link href={localePath(locale, '/blog')} className="tlink">{d.blog.all}</Link> : undefined}
+        >
+          {category ? d.empty.categoryBody : d.empty.articlesBody}
+        </EmptyState>
       )}
     </div>
   )

@@ -22,7 +22,7 @@ export function ArticleList({ items, locale }: { items: LocalizedArticle[]; loca
                 <h3
                   lang={a.language}
                   dir={a.language === 'ar' ? 'rtl' : 'ltr'}
-                  className={`text-start text-[clamp(1.3rem,2.4vw,1.75rem)] transition-colors duration-150 group-hover:text-link ${a.language === 'ar' ? 'font-ar-display font-bold leading-[1.55]' : 'font-[family-name:var(--font-fraunces)] leading-tight'}`}
+                  className={`text-start text-[clamp(1.3rem,2.4vw,1.75rem)] hover-underline ${a.language === 'ar' ? 'font-ar-display font-bold leading-[1.55]' : 'font-[family-name:var(--font-fraunces)] leading-tight'}`}
                 >
                   {a.title}
                 </h3>

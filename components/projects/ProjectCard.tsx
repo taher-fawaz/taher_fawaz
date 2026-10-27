@@ -21,7 +21,7 @@ export function ProjectCard({ project, locale, variant = 'lead', priority = fals
         sizes={variant === 'lead' ? '(min-width: 768px) 58vw, 100vw' : '(min-width: 768px) 40vw, 100vw'}
         priority={priority}
       />
-      <h3 className="mt-5 text-[clamp(1.75rem,3.3vw,2.5rem)] leading-[1.1] font-[family-name:var(--font-fraunces)] font-medium"><bdi dir="ltr">{project.title}</bdi></h3>
+      <h3 className="hover-underline mt-5 text-[clamp(1.75rem,3.3vw,2.5rem)] leading-[1.1] font-[family-name:var(--font-fraunces)] font-medium"><bdi dir="ltr">{project.title}</bdi></h3>
       <p className="mt-2 text-[0.95rem] text-muted">{tr(project.domain, locale)}</p>
       <p className="mt-2 max-w-[46ch]" lang={summary.lang}>{summary.text}</p>
       <Tags items={project.technologies.slice(0, 4)} label={d.projects.stack} />

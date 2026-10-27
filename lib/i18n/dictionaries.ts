@@ -22,7 +22,7 @@ const en = {
     headline: 'I build mobile apps at scale, then explain how they work.',
     now: 'Now',
     primaryCta: 'See selected work', secondaryCta: 'Read and watch',
-    rolesLabel: 'Three roles, one practice',
+    rolesLabel: 'Three roles, one practice', specialties: 'Specialties',
     roles: {
       engineer: { title: 'Engineer', text: 'Flutter and native Android, built on clean architecture and measured performance.' },
       educator: { title: 'Educator', text: 'Articles, videos and Shorts in Arabic about mobile engineering and the trade-offs behind it.' },
@@ -35,6 +35,7 @@ const en = {
   experience: { title: 'Work experience', lead: 'Most recent first.', skills: 'Skills, from the CV', reviewNote: 'Entries marked “Dates under review” come from a CV layout that needs a final check.' },
   projects: { title: 'Projects', lead: 'Two flagship products first. Detailed contributions and screenshots are added through the CMS.', more: 'More projects', domain: 'Domain', role: 'Role', period: 'Period', stack: 'Stack', contributions: 'Contributions', caseStudyPending: 'A detailed case study will be added later. Nothing here is invented in the meantime.', links: 'Links', screens: 'Screens' },
   blog: { title: 'Blog', lead: 'Written in Arabic first. An English version exists only where marked.', all: 'All', empty: 'No articles in this category yet.', none: 'No articles have been published yet.', languageLabel: 'Article language', translationAvailable: 'Also available in Arabic', englishAvailable: 'Read in English', arabicAvailable: 'اقرأ بالعربية', onlyArabic: 'This article is in Arabic. No English translation yet.', published: 'Published', category: 'Category' },
+  empty: { articles: 'No articles yet', articlesBody: 'The first articles are on their way. They are written in Arabic first.', category: 'Nothing in this category yet', categoryBody: 'Try another category or browse all articles.', videos: 'No videos yet', videosBody: 'Videos and Shorts will appear here as soon as they are published on YouTube.' },
   series: { part: (n: number, total: number) => `Part ${n} of ${total}`, contents: 'In this series', startHere: 'Start with part 1', previous: 'Previous part', next: 'Next part', more: 'More parts are on the way.', current: 'You are here', navLabel: 'Series navigation' },
   videos: { title: 'Videos and Shorts', lead: 'Hosted on YouTube and embedded from the original URL — never re-uploaded here.', videos: 'Videos', shorts: 'Shorts', play: (t: string) => `Play video: ${t}`, openOnYouTube: 'Open on YouTube', samplePlay: 'Sample entry — the real YouTube video will load here.', empty: 'No videos published yet.', youtubeVideo: 'YouTube video', youtubeShort: 'YouTube Short', channel: 'Watch everything on YouTube', unavailable: 'The latest videos could not be loaded from YouTube right now. They will appear again automatically.', recentNote: 'The newest uploads appear here automatically from YouTube.' },
   contact: {
@@ -76,7 +77,7 @@ const ar: Dictionary = {
     headline: 'أبني تطبيقات موبايل واسعة النطاق، ثم أشرح كيف تعمل.',
     now: 'حاليًا',
     primaryCta: 'شاهد أعمالي المختارة', secondaryCta: 'اقرأ وشاهد',
-    rolesLabel: 'ثلاثة أدوار، ممارسة واحدة',
+    rolesLabel: 'ثلاثة أدوار، ممارسة واحدة', specialties: 'مجالات التخصص',
     roles: {
       engineer: { title: 'المهندس', text: 'Flutter وأندرويد الأصلي، مبنيّان على معمارية نظيفة وأداء مقيس.' },
       educator: { title: 'المعلّم', text: 'مقالات وفيديوهات وشورتس بالعربية عن هندسة الموبايل والمفاضلات وراءها.' },
@@ -89,6 +90,7 @@ const ar: Dictionary = {
   experience: { title: 'الخبرات العملية', lead: 'الأحدث أولًا.', skills: 'المهارات، من السيرة الذاتية', reviewNote: 'الخانات الموسومة «التواريخ قيد المراجعة» مأخوذة من تخطيط في السيرة الذاتية يحتاج إلى مراجعة أخيرة.' },
   projects: { title: 'المشاريع', lead: 'منتجان رئيسيان أولًا. تُضاف المساهمات التفصيلية ولقطات الشاشة من لوحة التحرير.', more: 'مشاريع أخرى', domain: 'المجال', role: 'الدور', period: 'الفترة', stack: 'التقنيات', contributions: 'المساهمات', caseStudyPending: 'ستُضاف دراسة حالة تفصيلية لاحقًا. لا يوجد هنا شيء مختلق في الوقت الحالي.', links: 'روابط', screens: 'الشاشات' },
   blog: { title: 'المدوّنة', lead: 'تُكتب بالعربية أولًا. تتوفر نسخة إنجليزية فقط حيث يُشار إلى ذلك.', all: 'الكل', empty: 'لا توجد مقالات في هذا التصنيف بعد.', none: 'لم تُنشر أي مقالات بعد.', languageLabel: 'لغة المقال', translationAvailable: 'متوفر أيضًا بالإنجليزية', englishAvailable: 'Read in English', arabicAvailable: 'اقرأ بالعربية', onlyArabic: 'هذا المقال بالعربية.', published: 'نُشر', category: 'التصنيف' },
+  empty: { articles: 'لا توجد مقالات بعد', articlesBody: 'المقالات الأولى في الطريق، وتُكتب بالعربية أولًا.', category: 'لا يوجد شيء في هذا التصنيف بعد', categoryBody: 'جرّب تصنيفًا آخر أو تصفّح كل المقالات.', videos: 'لا توجد فيديوهات بعد', videosBody: 'ستظهر الفيديوهات والشورتس هنا فور نشرها على يوتيوب.' },
   series: { part: (n: number, total: number) => `الجزء ${n} من ${total}`, contents: 'محتويات السلسلة', startHere: 'ابدأ من الجزء الأول', previous: 'الجزء السابق', next: 'الجزء التالي', more: 'أجزاء أخرى قادمة.', current: 'أنت هنا', navLabel: 'التنقل داخل السلسلة' },
   videos: { title: 'الفيديوهات والشورتس', lead: 'مستضافة على يوتيوب وتُضمَّن من الرابط الأصلي — دون إعادة رفعها هنا.', videos: 'فيديوهات', shorts: 'شورتس', play: (t: string) => `تشغيل الفيديو: ${t}`, openOnYouTube: 'افتح على يوتيوب', samplePlay: 'عنصر تجريبي — سيُحمَّل فيديو يوتيوب الحقيقي هنا.', empty: 'لم تُنشر فيديوهات بعد.', youtubeVideo: 'فيديو يوتيوب', youtubeShort: 'يوتيوب شورت', channel: 'شاهد كل الفيديوهات على يوتيوب', unavailable: 'تعذّر تحميل أحدث الفيديوهات من يوتيوب الآن. ستظهر مجددًا تلقائيًا.', recentNote: 'تظهر أحدث الفيديوهات هنا تلقائيًا من يوتيوب.' },
   contact: {

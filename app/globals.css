@@ -224,17 +224,62 @@ html[lang='ar'] {
   a:hover .plate-art, a:focus-visible .plate-art { scale: 1.025; }
   a:hover .plate, a:focus-visible .plate { outline-color: var(--forest); }
 
-  /* Orbit diagram: the three roles. Hovering or focusing a role anywhere in the hero lights its orbit. */
-  .orbit-ring { fill: none; stroke: var(--field-rule); stroke-width: 1; transition: stroke var(--dur-base) var(--ease-out), stroke-width var(--dur-base) var(--ease-out); }
-  .orbit-body circle { fill: var(--field); stroke: var(--gold-lt); stroke-width: 1.5; transition: r var(--dur-base) var(--ease-out), fill var(--dur-base) var(--ease-out); }
-  .orbit-body text { fill: var(--field-ink); font: 500 15px var(--font-inter), sans-serif; text-anchor: middle; paint-order: stroke; stroke: var(--field); stroke-width: 6px; }
-  html[lang='ar'] .orbit-body text { font: 600 19px var(--font-plex-ar), sans-serif; }
+  /* Hero: faint technical grid behind the text, fading out toward the roles list. */
+  .hero { position: relative; isolation: isolate; overflow: clip; }
+  .hero::before {
+    content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background-image: radial-gradient(circle at center, rgb(246 241 231 / 0.11) 1px, transparent 1.5px);
+    background-size: 32px 32px;
+    mask-image: linear-gradient(to bottom, #000 0%, transparent 72%);
+  }
+
+  .eyebrow { display: flex; flex-wrap: wrap; align-items: center; column-gap: 0.7rem; row-gap: 0.15rem; color: var(--field-ink); font: 500 0.75rem/1.5 var(--font-jetbrains), ui-monospace, monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+  @media (min-width: 640px) { .eyebrow { font-size: 0.8125rem; } }
+  .eyebrow::before { content: ''; flex: none; width: 0.55rem; height: 0.55rem; background: var(--gold-lt); }
+  html[lang='ar'] .eyebrow { font: 600 0.95rem/1.5 var(--font-plex-ar), sans-serif; letter-spacing: 0; text-transform: none; }
+
+  /* Orbit diagram: the three roles. Hovering or focusing a role anywhere in the hero lights its orbit and dims the others. */
+  .orbit-bezel { fill: none; stroke: var(--field-ink); stroke-opacity: 0.28; stroke-width: 1; }
+  .orbit-bezel .orbit-axes { stroke-opacity: 0.12; }
+  .orbit-ring { fill: none; stroke-width: 1.25; transition: stroke-opacity var(--dur-base) var(--ease-out), stroke-width var(--dur-base) var(--ease-out); }
+  .ring-engineer { stroke: var(--gold-lt); stroke-opacity: 0.75; }
+  .ring-educator { stroke: var(--field-ink); stroke-opacity: 0.4; }
+  .ring-builder { stroke: var(--field-ink); stroke-opacity: 0.4; stroke-dasharray: 0.006 0.0105; }
+  .orbit-core { fill: var(--gold-lt); }
+  .orbit-body { transition: opacity var(--dur-base) var(--ease-out); cursor: pointer; }
+  .orbit-node { fill: var(--field); stroke: var(--gold-lt); stroke-width: 2; transition: r var(--dur-base) var(--ease-out), fill var(--dur-base) var(--ease-out); }
+  .orbit-halo { fill: none; stroke: var(--gold-lt); stroke-width: 1; opacity: 0; transition: opacity var(--dur-base) var(--ease-out); }
+  .orbit-body text { fill: var(--field-ink); font: 500 16px var(--font-inter), sans-serif; paint-order: stroke; stroke: var(--field); stroke-width: 7px; stroke-linejoin: round; }
+  .orbit-body .orbit-index { fill: var(--gold-lt); font: 500 12px var(--font-jetbrains), ui-monospace, monospace; letter-spacing: 0.04em; }
+  html[lang='ar'] .orbit-body text { font: 600 20px var(--font-plex-ar), sans-serif; }
+  .orbit-body:focus-visible { outline: none; }
+  .orbit-body:focus-visible .orbit-halo { opacity: 1; stroke-width: 2; }
+  .orbit-body:focus-visible .orbit-node { fill: var(--gold-lt); }
+
+  .hero:has([data-role]:is(:hover, :focus-visible)) .orbit-body { opacity: 0.5; }
+  .hero:has([data-role]:is(:hover, :focus-visible)) .orbit-ring { stroke-opacity: 0.18; }
+  .hero:has([data-role='engineer']:is(:hover, :focus-visible)) :is(.body-engineer) { opacity: 1; }
+  .hero:has([data-role='educator']:is(:hover, :focus-visible)) :is(.body-educator) { opacity: 1; }
+  .hero:has([data-role='builder']:is(:hover, :focus-visible)) :is(.body-builder) { opacity: 1; }
   .hero:has([data-role='engineer']:is(:hover, :focus-visible)) .ring-engineer,
   .hero:has([data-role='educator']:is(:hover, :focus-visible)) .ring-educator,
-  .hero:has([data-role='builder']:is(:hover, :focus-visible)) .ring-builder { stroke: var(--gold-lt); stroke-width: 1.5; }
-  .hero:has([data-role='engineer']:is(:hover, :focus-visible)) .body-engineer circle,
-  .hero:has([data-role='educator']:is(:hover, :focus-visible)) .body-educator circle,
-  .hero:has([data-role='builder']:is(:hover, :focus-visible)) .body-builder circle { r: 13px; fill: var(--gold-lt); }
+  .hero:has([data-role='builder']:is(:hover, :focus-visible)) .ring-builder { stroke: var(--gold-lt); stroke-opacity: 1; stroke-width: 2; }
+  .hero:has([data-role='engineer']:is(:hover, :focus-visible)) .body-engineer .orbit-node,
+  .hero:has([data-role='educator']:is(:hover, :focus-visible)) .body-educator .orbit-node,
+  .hero:has([data-role='builder']:is(:hover, :focus-visible)) .body-builder .orbit-node { r: 12px; fill: var(--gold-lt); }
+  .hero:has([data-role='engineer']:is(:hover, :focus-visible)) .body-engineer .orbit-halo,
+  .hero:has([data-role='educator']:is(:hover, :focus-visible)) .body-educator .orbit-halo,
+  .hero:has([data-role='builder']:is(:hover, :focus-visible)) .body-builder .orbit-halo { opacity: 0.8; }
+
+  /* Role list under the hero: its line sample matches the orbit it belongs to. */
+  .role-key { flex: none; width: 1.75rem; height: 0.5rem; overflow: visible; }
+  .role-key line { stroke-width: 2; }
+  .role-link { transition: background-color var(--dur-base) var(--ease-out); }
+  .role-link:hover, .role-link:focus-visible { background-color: rgb(246 241 231 / 0.05); }
+
+  /* Titles in clickable rows: the underline appears under the whole group's hover/focus without moving any text. */
+  .hover-underline { text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 2px; text-underline-offset: 0.22em; transition: text-decoration-color var(--dur-fast) var(--ease-out); }
+  .group:is(:hover, :focus-visible) .hover-underline { text-decoration-color: var(--gold); }
 
   /* Long-form reading */
   .prose { max-width: 68ch; }
@@ -259,16 +304,20 @@ html[lang='ar'] {
 
 /* ───────────── Hero entrance (the page's one orchestrated moment) ─────────────
    Pure CSS so it starts on first paint and never waits for JavaScript: waiting for
-   the GSAP bundle delayed LCP to ~6.8s on throttled mobile. Items rise in sequence
-   (--i sets the order), rings draw via pathLength="1", the three bodies settle. */
+   the GSAP bundle delayed LCP to ~6.8s on throttled mobile. Order (--i): eyebrow, headline,
+   copy, CTAs, status line; the orbit draws its bezel and rings, then each role settles onto
+   its ring in turn. Only transform, opacity and stroke-dashoffset animate; nothing loops. */
 @media (prefers-reduced-motion: no-preference) {
   [data-hero-item] { animation: hero-rise 0.8s var(--ease-out) both; animation-delay: calc(var(--i, 0) * 90ms); }
-  .orbit-ring { stroke-dasharray: 1; animation: ring-draw 1.2s cubic-bezier(0.65, 0, 0.35, 1) both; animation-delay: calc(150ms + var(--i, 0) * 120ms); }
-  .orbit-bodies { transform-box: view-box; transform-origin: 280px 280px; animation: bodies-settle 1.3s var(--ease-out) 0.4s both; }
+  .orbit-bezel { animation: bezel-in 1s var(--ease-out) 0.1s both; }
+  .orbit-ring { stroke-dasharray: 1; animation: ring-draw 1.2s cubic-bezier(0.65, 0, 0.35, 1) both; animation-delay: calc(250ms + var(--i, 0) * 140ms); }
+  .ring-builder { stroke-dasharray: 0.006 0.0105; animation: bezel-in 1s var(--ease-out) both; animation-delay: calc(250ms + var(--i, 0) * 140ms); }
+  .orbit-body { transform-box: view-box; transform-origin: 280px 280px; animation: body-arc 1.1s var(--ease-out) both; animation-delay: calc(650ms + var(--i, 0) * 160ms); }
 }
 @keyframes hero-rise { from { opacity: 0; translate: 0 16px; } }
 @keyframes ring-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-@keyframes bodies-settle { from { opacity: 0; rotate: -18deg; } }
+@keyframes bezel-in { from { opacity: 0; } }
+@keyframes body-arc { from { opacity: 0; rotate: -32deg; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }

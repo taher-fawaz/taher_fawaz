@@ -41,7 +41,7 @@ export default async function ProjectsPage({ params }: PageProps<'/[locale]/proj
               return (
                 <li key={p.id} data-reveal className="border-b border-rule">
                   <Link href={localePath(locale, `/projects/${p.slug}`)} className="group grid gap-x-8 gap-y-1 py-5 md:grid-cols-[minmax(0,14rem)_minmax(0,1fr)_auto] md:items-baseline">
-                    <span className="font-[family-name:var(--font-fraunces)] text-[1.35rem] transition-colors group-hover:text-link"><bdi dir="ltr">{p.title}</bdi></span>
+                    <span className="font-[family-name:var(--font-fraunces)] text-[1.35rem] hover-underline"><bdi dir="ltr">{p.title}</bdi></span>
                     <span className="text-muted" lang={summary.lang}>{summary.text}</span>
                     <span className="flex items-center gap-2 text-[0.9rem] text-muted">
                       {tr(p.domain, locale)}

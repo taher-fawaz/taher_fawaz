@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { isLocale } from '@/lib/i18n/config'
+import Link from 'next/link'
+import { isLocale, localePath } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/dictionaries'
 import { getVideoLibrary } from '@/lib/content'
 import { pageMetadata } from '@/lib/site'
-import { PageHeader } from '@/components/ui/primitives'
+import { EmptyState, PageHeader } from '@/components/ui/primitives'
 import { ExternalIcon } from '@/components/ui/icons'
 import { Reveal } from '@/components/motion/Reveal'
 import { VideoCard } from '@/components/content/VideoCard'
@@ -37,7 +38,7 @@ export default async function VideosPage({ params }: PageProps<'/[locale]/videos
       {feedStatus === 'unavailable' ? (
         <p role="status" className="mb-10 max-w-[62ch] border border-rule px-4 py-3 text-[0.95rem] text-muted">{d.videos.unavailable}</p>
       ) : null}
-      {!videos.length && feedStatus !== 'unavailable' ? <p className="rule-strong pt-8 text-muted">{d.videos.empty}</p> : null}
+      {!videos.length && feedStatus !== 'unavailable' ? <EmptyState title={d.empty.videos} actions={<Link href={localePath(locale, '/blog')} className="tlink">{d.home.secondaryCta}</Link>}>{d.empty.videosBody}</EmptyState> : null}
       {long.length ? (
         <section aria-labelledby="long" className="rule-strong pt-8">
           <h2 id="long" className="section-title mb-8">{d.videos.videos}</h2>
