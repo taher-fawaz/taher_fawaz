@@ -124,6 +124,7 @@ html[lang='ar'] {
   .display-2 { font-size: clamp(2.1rem, 4.2vw, 3.5rem); line-height: calc(var(--display-leading) + 0.02); letter-spacing: var(--display-tracking); font-weight: 700; }
   .section-title { font-size: clamp(2.1rem, 4.2vw, 3.5rem); line-height: 1.05; letter-spacing: -0.03em; font-weight: 700; }
   html[lang='ar'] :is(.display-1, .display-2, .section-title) { font-weight: 800; letter-spacing: 0; line-height: 1.4; }
+  html[lang='ar'] .display-1 { font-size: clamp(2.3rem, 4.6vw, 4rem); line-height: 1.45; }
 
   .mono, .meta { font-family: var(--font-jetbrains), ui-monospace, monospace; letter-spacing: 0.01em; }
   .meta { font-size: 0.8em; direction: ltr; unicode-bidi: isolate; font-variant-numeric: tabular-nums; }

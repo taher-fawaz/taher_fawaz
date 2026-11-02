@@ -4,12 +4,13 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { isLocale, localePath, type Locale } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/dictionaries'
-import { getExperience, getHomeData, getProjects } from '@/lib/content'
-import { pick, tr } from '@/lib/content/localize'
+import { getCareer, getHomeData, getProjects } from '@/lib/content'
+import { assignLandmarks } from '@/lib/landmarks'
+import { tr } from '@/lib/content/localize'
 import { pageMetadata, siteUrl } from '@/lib/site'
 import { Handheld } from '@/components/game/Handheld'
 import { ProjectCards, type CardData } from '@/components/game/ProjectCards'
-import { JourneyMap, type Landmark, type Stop } from '@/components/game/JourneyMap'
+import { JourneyMap, type Stop } from '@/components/game/JourneyMap'
 import { Loadout, type LoadoutSkill } from '@/components/game/Loadout'
 import { VideoCard } from '@/components/content/VideoCard'
 import { ContactForm } from '@/components/contact/ContactForm'
@@ -44,8 +45,7 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
   const locale: Locale = raw
   const d = getDictionary(locale)
   const g = d.game
-  const [{ settings, articles, videos }, projects, experience] = await Promise.all([getHomeData(locale), getProjects(), getExperience()])
-  const intro = pick(settings.intro, locale)
+  const [{ settings, articles, videos }, projects, experience] = await Promise.all([getHomeData(locale), getProjects(), getCareer()])
   const current = experience.find((e) => !e.end)
 
   const cards: CardData[] = projects.map((p, i) => ({
@@ -63,19 +63,22 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
     cover: p.cover ? { url: p.cover.url, alt: tr(p.cover.alt, locale) } : undefined,
   }))
 
-  // Oldest first, so the path reads as a journey toward today.
-  const landmarkFor = (place: string): Landmark => (/dubai|دبي/i.test(place) ? 'tower' : /kuala|كوالا/i.test(place) ? 'twin' : /cairo|القاهرة|maadi|المعادي/i.test(place) ? 'pyramid' : 'building')
-  const stops: Stop[] = [...experience].reverse().map((e, i) => ({
+  // Oldest first, so the path reads as a journey toward today; each stop gets its own city landmark.
+  const journey = [...experience].reverse()
+  const landmarks = assignLandmarks(journey.map((e) => tr(e.location, 'en')))
+  const stops: Stop[] = journey.map((e, i) => ({
     id: e.id,
     company: e.employer,
-    short: e.employer.replace(/\s*\(.*\)$/, '').replace(/\s+Co\.$/, ''),
+    short: e.employer.replace(/\s*\(.*\)$/, '').replace(/\s+(Co\.|CO-living)$/i, ''),
     role: tr(e.role, locale),
     years: `${e.start.slice(0, 4)} – ${e.end ? e.end.slice(0, 4) : d.common.present}`,
     place: tr(e.location, locale),
     note: e.highlights[0] ? tr(e.highlights[0], locale) : tr(e.summary, locale),
     now: !e.end,
+    review: e.needsReview,
     tint: TINTS[i % TINTS.length]!,
-    landmark: landmarkFor(tr(e.location, 'en')),
+    landmark: landmarks[i]!,
+    landmarkName: g.landmarks[landmarks[i]!],
   }))
 
   const skills = [...new Set([...projects.flatMap((p) => p.technologies), ...experience.flatMap((e) => e.technologies)])].slice(0, 12)
@@ -112,7 +115,7 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
             {g.heroA} <mark className="rounded-xl bg-yellow px-[0.12em] text-ink">{g.heroHl}</mark>
             {g.heroB} <span className="text-orange-ink">{g.heroEnd}</span>
           </h1>
-          <p {...enter(2)} className="mt-6 max-w-[50ch] text-[1.15rem] text-[#4A4945]" lang={intro.lang}>{intro.text}</p>
+          <p {...enter(2)} className="mt-6 max-w-[54ch] text-[1.15rem] text-[#4A4945]">{g.intro}</p>
           <div {...enter(3)} className="mt-9 flex flex-wrap gap-3.5">
             <Link href="#work" className="btn">{g.seeWork} <span aria-hidden="true" className="icon-fwd">→</span></Link>
             <Link href="#play" className="btn btn-ghost"><span aria-hidden="true">▶</span> {g.play}</Link>
@@ -166,7 +169,7 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
         <section id="experience" aria-labelledby="exp-title" className="wrap pb-6 pt-20 md:pb-10 md:pt-28">
           <SectionTitle id="exp-title" label={g.expLabel} title={g.expTitle} hint={g.expHint} />
           <div className="mt-14">
-            <JourneyMap stops={stops} labels={{ stops: g.expList, stage: g.stage, of: g.of, cleared: g.cleared, current: g.current, here: g.here }} />
+            <JourneyMap stops={stops} labels={{ stops: g.expList, stage: g.stage, of: g.of, cleared: g.cleared, current: g.current, here: g.here, review: d.common.underReview }} />
           </div>
         </section>
       ) : null}

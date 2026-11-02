@@ -38,6 +38,20 @@ export const getExperience = cache(async (): Promise<Experience[]> =>
   isSanityConfigured ? sanityFetch<Experience[]>(q.experienceQuery, {}, ['experience']) : fb.fallbackExperience,
 )
 
+/**
+ * The whole career for the journey map: published CMS entries plus any CV entry the CMS does not
+ * have yet (the older jobs still held as drafts), newest first. CV-only entries keep their
+ * "dates under review" flag so the page can say so.
+ */
+export const getCareer = cache(async (): Promise<Experience[]> => {
+  const cms = await getExperience()
+  if (!isSanityConfigured) return cms
+  const key = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '')
+  const known = new Set(cms.map((e) => key(e.employer)))
+  const missing = fb.fallbackExperience.filter((e) => !known.has(key(e.employer)))
+  return [...cms, ...missing].sort((a, b) => (a.start < b.start ? 1 : -1))
+})
+
 export const getProjects = cache(async (): Promise<Project[]> =>
   isSanityConfigured ? sanityFetch<Project[]>(q.projectsQuery, {}, ['project']) : fb.fallbackProjects,
 )

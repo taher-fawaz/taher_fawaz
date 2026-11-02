@@ -20,14 +20,14 @@ export const fallbackSettings: SiteSettings = {
   role: { en: 'Senior Mobile Application Developer', ar: 'مطوّر تطبيقات موبايل أول' },
   intro: {
     en: 'Seven years of Flutter and native Android, from telecom and government services to education and cybersecurity.',
-    ar: 'سبع سنوات مع Flutter وأندرويد الأصلي، من الاتصالات والخدمات الحكومية إلى التعليم والأمن السيبراني.',
+    ar: 'سبع سنوات مع Flutter وAndroid، من الاتصالات والخدمات الحكومية إلى التعليم والأمن السيبراني.',
   },
   story: {
     en: [
       block('I am a Senior Mobile Application Developer specialising in Flutter and native Android (Kotlin and Java), with seven years of experience delivering mobile apps across telecommunications, government services, education, cybersecurity and business tools. I started in web development before moving to mobile.'),
     ],
     ar: [
-      block('أنا مطوّر تطبيقات موبايل أول متخصص في Flutter وأندرويد الأصلي (Kotlin وJava)، بخبرة سبع سنوات في تسليم تطبيقات في مجالات الاتصالات والخدمات الحكومية والتعليم والأمن السيبراني وأدوات الأعمال. بدأت في تطوير الويب قبل أن أنتقل إلى الموبايل.'),
+      block('أنا مطوّر تطبيقات موبايل أول متخصص في Flutter وتطوير Android بـ Kotlin وJava، بخبرة سبع سنوات في تسليم تطبيقات في مجالات الاتصالات والخدمات الحكومية والتعليم والأمن السيبراني وأدوات الأعمال. بدأت في تطوير الويب قبل أن أنتقل إلى الموبايل.'),
     ],
   },
   principles: [],
@@ -145,7 +145,7 @@ export const fallbackProjects: Project[] = [
     domain: { en: 'Cybersecurity · UK', ar: 'أمن سيبراني · بريطانيا' },
     role: { en: 'Flutter Developer', ar: 'مطوّر Flutter' },
     technologies: ['Flutter', 'Android (Java)', 'Provider', 'Method Channel'],
-    contributions: [{ en: 'Flutter and native Android, Provider, HTTP, AI model integration and method channels.', ar: 'Flutter وأندرويد الأصلي وProvider وHTTP ودمج نماذج الذكاء الاصطناعي وقنوات المنصة (Method Channel).' }],
+    contributions: [{ en: 'Flutter and native Android, Provider, HTTP, AI model integration and method channels.', ar: 'Flutter وتطوير Android بـ Java وProvider وHTTP ودمج نماذج الذكاء الاصطناعي وقنوات المنصة (Method Channel).' }],
     links: [], gallery: [],
   },
   {

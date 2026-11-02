@@ -84,7 +84,13 @@ export function Buddy({ lines }: { lines: BuddyLines }) {
   if (hidden) return null
 
   return (
-    <div className="pointer-events-none fixed bottom-4 start-3 z-40 flex items-end gap-2 sm:bottom-6 sm:start-5">
+    <div className="pointer-events-none fixed bottom-4 start-3 z-40 flex flex-col items-start gap-2 sm:bottom-6 sm:start-5">
+      {say ? (
+        <p key={say} className="toast hw pointer-events-auto max-w-[13rem] rounded-2xl rounded-es-sm px-3.5 py-2.5 text-[0.85rem] font-medium leading-snug sm:max-w-[16rem] sm:text-[0.9rem]">
+          {say}
+        </p>
+      ) : null}
+
       <div className="pointer-events-auto relative">
         <button
           type="button"
@@ -119,11 +125,6 @@ export function Buddy({ lines }: { lines: BuddyLines }) {
           ×
         </button>
       </div>
-      {say ? (
-        <p key={say} className="toast hw pointer-events-auto mb-10 max-w-[13rem] rounded-2xl rounded-es-sm px-3.5 py-2.5 text-[0.85rem] font-medium leading-snug sm:mb-14 sm:max-w-[16rem] sm:text-[0.9rem]">
-          {say}
-        </p>
-      ) : null}
     </div>
   )
 }
