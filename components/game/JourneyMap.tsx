@@ -109,7 +109,7 @@ export function JourneyMap({ stops, labels }: { stops: Stop[]; labels: Labels })
                     <span className="sr-only">{s.company}</span>
                   </button>
                   <span className="mt-2 max-w-[8rem] px-0.5 text-center font-[family-name:var(--font-unbounded)] text-[0.62rem] font-bold leading-tight sm:text-[0.72rem] [html[lang=ar]_&]:font-[family-name:var(--font-alexandria)]"><bdi dir="ltr">{s.short}</bdi></span>
-                  <span className="mt-0.5 text-[0.68rem] text-muted">{s.place.split(/[،,]/).at(-2)?.trim() || s.place}</span>
+                  {s.place ? <span className="mt-0.5 text-[0.68rem] text-muted">{s.place.split(/[،,]/).at(-2)?.trim() || s.place}</span> : null}
                   {s.now ? <span className="flag mono mt-1 rounded-full border-2 border-ink bg-orange px-2 py-px text-[0.6rem]">{labels.here}</span> : null}
                 </li>
               )
@@ -133,7 +133,7 @@ export function JourneyMap({ stops, labels }: { stops: Stop[]; labels: Labels })
             <dt className="sr-only">Years</dt>
             <dd className="flex flex-wrap items-center gap-2"><span className="mono" dir="ltr">{stop.years}</span>{stop.review ? <span className="rounded-full border border-yellow px-2 text-[0.72rem] text-yellow">{labels.review}</span> : null}</dd>
           </div>
-          <div className="rounded-2xl border-2 border-[#3A3A3F] px-4 py-2.5"><dt className="sr-only">Place</dt><dd>{stop.place} · <span className="text-[#CFCBC2]">{stop.landmarkName}</span></dd></div>
+          <div className="rounded-2xl border-2 border-[#3A3A3F] px-4 py-2.5"><dt className="sr-only">Place</dt><dd>{stop.place ? <>{stop.place} · </> : null}<span className="text-[#CFCBC2]">{stop.landmarkName}</span></dd></div>
         </dl>
       </div>
     </div>

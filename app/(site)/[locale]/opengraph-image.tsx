@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 import { FRAMES, SPRITE_H, SPRITE_W, toRuns } from '@/lib/taher-sprite'
 
-export const alt = 'Taher Fawaz — Senior Mobile Application Developer'
+export const alt = 'Taher Fawaz — Senior Mobile Engineer'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -17,7 +17,7 @@ export default function OpengraphImage() {
             Taher Fawaz
           </div>
           <div style={{ marginTop: 40, fontSize: 70, lineHeight: 1.05, fontWeight: 800, letterSpacing: -2 }}>I build mobile apps at scale, and teach how they work.</div>
-          <div style={{ marginTop: 36, fontSize: 28, color: '#5F5E59' }}>Senior Mobile Application Developer · Flutter · Android</div>
+          <div style={{ marginTop: 36, fontSize: 28, color: '#5F5E59' }}>Senior Mobile Engineer · Flutter · Android</div>
         </div>
         <div style={{ display: 'flex', width: 300, height: 420, background: '#F6F4EF', border: '4px solid #17171A', borderRadius: 40, boxShadow: '0 12px 0 #17171A', alignItems: 'center', justifyContent: 'center' }}>
           <svg width={SPRITE_W * 12} height={SPRITE_H * 12} viewBox={`0 0 ${SPRITE_W} ${SPRITE_H}`} shapeRendering="crispEdges">

@@ -3,7 +3,7 @@ import type { Locale } from './config'
 const en = {
   meta: {
     siteName: 'Taher Fawaz',
-    title: 'Taher Fawaz — Senior Mobile Application Developer',
+    title: 'Taher Fawaz — Senior Mobile Engineer',
     description:
       'Taher Fawaz, senior mobile engineer: Flutter first, plus SwiftUI and Jetpack Compose. Apps for telecom and government, and Arabic articles on building them well.',
   },
@@ -50,7 +50,8 @@ const en = {
     expLabel: '02 · Experience', expTitle: 'Places I’ve worked', expHint: 'Pick a stop on the map and I’ll walk there.', now: 'now playing', expList: 'Career stops, oldest first', stage: 'Stage', of: 'of', cleared: 'cleared', current: 'in progress', here: 'I’m here',
     artLabel: '03 · Articles', artTitle: 'Strategy guides', artHint: 'Written in Arabic, about building real mobile apps.', read: 'Read the guide', newBadge: 'new',
     videos: 'Videos and Shorts', videosSoon: 'Coming soon', videosBody: 'New YouTube uploads appear here on their own.',
-    landmarks: { pyramids: 'Giza Pyramids', cairoTower: 'Cairo Tower', sphinx: 'The Great Sphinx', citadel: 'Cairo Citadel', iconic: 'A modern Cairo tower', burjKhalifa: 'Burj Khalifa', klTower: 'KL Tower', petronas: 'Petronas Twin Towers' },
+    landmarks: { pyramids: 'Giza Pyramids', cairoTower: 'Cairo Tower', sphinx: 'The Great Sphinx', citadel: 'Cairo Citadel', iconic: 'A modern Cairo tower', burjKhalifa: 'Burj Khalifa', klTower: 'KL Tower', petronas: 'Petronas Twin Towers', gradCap: 'Graduation cap' },
+    grad: { company: 'Faculty of Engineering', short: 'Engineering', role: 'Engineering graduate', note: 'Graduated as an engineer. Every stop after this one builds on it.' },
     skillsLabel: '04 · Skills', skillsTitle: 'My loadout', skillsHint: 'What I build with, main weapon first.', equipped: 'equipped',
     tiers: {
       flutter: { tier: 'Main', line: 'My home turf: production apps used by millions, from architecture to release.' },
@@ -84,7 +85,7 @@ export type Dictionary = typeof en
 const ar: Dictionary = {
   meta: {
     siteName: 'طاهر فواز',
-    title: 'طاهر فواز — مطوّر تطبيقات موبايل أول',
+    title: 'طاهر فواز — مهندس تطبيقات موبايل أول',
     description: 'طاهر فواز، مهندس تطبيقات موبايل أول: Flutter أولًا، ومعه SwiftUI و Jetpack Compose. تطبيقات للاتصالات والخدمات الحكومية، ومقالات بالعربية عن بنائها بالطريقة الصحيحة.',
   },
   a11y: { skip: 'انتقل إلى المحتوى', menu: 'القائمة', closeMenu: 'إغلاق القائمة', primaryNav: 'التنقل الرئيسي', themeDark: 'التبديل إلى الوضع الداكن', themeLight: 'التبديل إلى الوضع الفاتح', switchLang: 'Switch language to English' },
@@ -130,7 +131,8 @@ const ar: Dictionary = {
     expLabel: '02 · خبراتي', expTitle: 'الأماكن التي عملت بها', expHint: 'اضغط على أي محطة في الخريطة، وسأمشي إليها.', now: 'حاليًا', expList: 'محطات المسيرة، من الأقدم إلى الأحدث', stage: 'المرحلة', of: 'من', cleared: 'مكتملة', current: 'أعمل فيها حاليًا', here: 'أنا هنا',
     artLabel: '03 · مقالاتي', artTitle: 'أدلّة اللعب', artHint: 'أكتب بالعربية عن بناء تطبيقات موبايل حقيقية.', read: 'اقرأ الدليل', newBadge: 'جديد',
     videos: 'فيديوهات وشورتس', videosSoon: 'قريبًا', videosBody: 'ستظهر فيديوهاتي الجديدة على يوتيوب هنا تلقائيًا.',
-    landmarks: { pyramids: 'أهرامات الجيزة', cairoTower: 'برج القاهرة', sphinx: 'أبو الهول', citadel: 'قلعة صلاح الدين', iconic: 'برج حديث في القاهرة', burjKhalifa: 'برج خليفة', klTower: 'برج كوالالمبور', petronas: 'برجا بتروناس' },
+    landmarks: { pyramids: 'أهرامات الجيزة', cairoTower: 'برج القاهرة', sphinx: 'أبو الهول', citadel: 'قلعة صلاح الدين', iconic: 'برج حديث في القاهرة', burjKhalifa: 'برج خليفة', klTower: 'برج كوالالمبور', petronas: 'برجا بتروناس' , gradCap: 'قبعة التخرّج' },
+    grad: { company: 'كلية الهندسة', short: 'الهندسة', role: 'خرّيج هندسة', note: 'تخرّجت مهندسًا، ومن هنا بدأت الرحلة.' },
     skillsLabel: '04 · مهاراتي', skillsTitle: 'عُدّتي التقنية', skillsHint: 'الأدوات التي أبني بها، والأساسية أولًا.', equipped: 'مُجهَّز',
     tiers: {
       flutter: { tier: 'الأساسية', line: 'ملعبي الأساسي: تطبيقات حقيقية يستخدمها الملايين، من المعمارية حتى النشر.' },

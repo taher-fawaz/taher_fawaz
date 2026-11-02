@@ -67,7 +67,12 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
   // Oldest first, so the path reads as a journey toward today; each stop gets its own city landmark.
   const journey = [...experience].reverse()
   const landmarks = assignLandmarks(journey.map((e) => tr(e.location, 'en')))
-  const stops: Stop[] = journey.map((e, i) => ({
+  // The journey starts at graduation (engineering, 2018), before the first job.
+  const gradStop: Stop = {
+    id: 'graduation', company: g.grad.company, short: g.grad.short, role: g.grad.role, years: '2018', place: '', note: g.grad.note,
+    now: false, review: false, tint: '#E8E2F7', landmark: 'gradCap', landmarkName: g.landmarks.gradCap,
+  }
+  const jobStops: Stop[] = journey.map((e, i) => ({
     id: e.id,
     company: e.employer,
     short: e.employer.replace(/\s*\(.*\)$/, '').replace(/\s+(Co\.|CO-living)$/i, ''),
@@ -81,6 +86,7 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
     landmark: landmarks[i]!,
     landmarkName: g.landmarks[landmarks[i]!],
   }))
+  const stops = jobStops.length ? [gradStop, ...jobStops] : []
 
   const skills = [...new Set([...projects.flatMap((p) => p.technologies), ...experience.flatMap((e) => e.technologies)])].slice(0, 12)
   const f = d.contact.form

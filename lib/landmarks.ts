@@ -1,4 +1,4 @@
-// Pixel landmarks (16×20) for the cities on the career map. Pure data, unit-tested.
+// Pixel landmarks (16×20) for the cities on the career map, plus the graduation cap for its first stop. Pure data, unit-tested.
 // Each company gets its own landmark; companies in the same city get different ones, in order.
 
 export const LANDMARK_W = 16
@@ -19,6 +19,7 @@ export const LANDMARK_PALETTE: Record<string, string> = {
   D: '#3A3A3F', // windows
   R: '#FF5B1F', // beacon
   g: '#2BC48A', // greenery
+  Y: '#FFC93C', // tassel
 }
 
 const E = '................'
@@ -62,6 +63,10 @@ export const LANDMARKS = {
     '.LlLlL....LlLlL.', '.LLLLL....LLLLL.', '.LlLlLKKKKLlLlL.', '.LLLLL....LLLLL.', 'LLLLLLL..LLLLLLL', 'LlLlLlL..LlLlLlL',
     'LLLLLLL..LLLLLLL', 'LlLlLlL..LlLlLlL', 'LLLLLLL..LLLLLLL', 'LlLlLlL..LlLlLlL', 'LLLLLLL..LLLLLLL', 'LLLLLLL..LLLLLLL',
     'LLLLLLLLLLLLLLLL', GROUND],
+  gradCap: [E, E, E, E, E, E,
+    '.......KK.......', '.....KKDDKK.....', '...KKDDDDDDKK...', '.KKDDDDKKDDDDKK.', '...KKDDDDDDKKY..', '.....KKDDKK..Y..',
+    '....DKKKKKKD.Y..', '....DDDDDDDD.YY.', '....DDDDDDDD.YY.', '....KDDDDDDK....', '.....KKKKKK.....', '................',
+    '...WWWWRWWWWW...', GROUND],
 } satisfies Record<string, string[]>
 
 export type LandmarkId = keyof typeof LANDMARKS
