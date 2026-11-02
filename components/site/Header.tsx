@@ -13,6 +13,7 @@ export function Header({ locale }: { locale: Locale }) {
     { id: 'work', label: g.menu.work },
     { id: 'experience', label: g.menu.experience },
     { id: 'articles', label: g.menu.articles },
+    { id: 'skills', label: g.menu.skills },
     { id: 'play', label: g.menu.play },
   ]
   return (
@@ -26,7 +27,7 @@ export function Header({ locale }: { locale: Locale }) {
           <ul className="flex gap-0.5">
             {anchors.map((a) => (
               <li key={a.id}>
-                <Link href={`${home}#${a.id}`} className="pill text-ink">{a.label}</Link>
+                <Link href={`${home}#${a.id}`} className="pill !px-3 text-ink xl:!px-4">{a.label}</Link>
               </li>
             ))}
           </ul>

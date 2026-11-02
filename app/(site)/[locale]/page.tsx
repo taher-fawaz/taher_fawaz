@@ -9,7 +9,8 @@ import { pick, tr } from '@/lib/content/localize'
 import { pageMetadata, siteUrl } from '@/lib/site'
 import { Handheld } from '@/components/game/Handheld'
 import { ProjectCards, type CardData } from '@/components/game/ProjectCards'
-import { Cartridges, type Job } from '@/components/game/Cartridges'
+import { JourneyMap, type Landmark, type Stop } from '@/components/game/JourneyMap'
+import { Loadout, type LoadoutSkill } from '@/components/game/Loadout'
 import { VideoCard } from '@/components/content/VideoCard'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { Ltr } from '@/components/ui/primitives'
@@ -62,20 +63,29 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
     cover: p.cover ? { url: p.cover.url, alt: tr(p.cover.alt, locale) } : undefined,
   }))
 
-  const jobs: Job[] = experience.map((e, i) => ({
+  // Oldest first, so the path reads as a journey toward today.
+  const landmarkFor = (place: string): Landmark => (/dubai|دبي/i.test(place) ? 'tower' : /kuala|كوالا/i.test(place) ? 'twin' : /cairo|القاهرة|maadi|المعادي/i.test(place) ? 'pyramid' : 'building')
+  const stops: Stop[] = [...experience].reverse().map((e, i) => ({
     id: e.id,
-    short: e.employer.replace(/\s*\(.*\)$/, '').replace(/\s+Co\.$/, ''),
     company: e.employer,
+    short: e.employer.replace(/\s*\(.*\)$/, '').replace(/\s+Co\.$/, ''),
     role: tr(e.role, locale),
     years: `${e.start.slice(0, 4)} – ${e.end ? e.end.slice(0, 4) : d.common.present}`,
     place: tr(e.location, locale),
     note: e.highlights[0] ? tr(e.highlights[0], locale) : tr(e.summary, locale),
     now: !e.end,
-    shell: TINTS[i % TINTS.length]!,
+    tint: TINTS[i % TINTS.length]!,
+    landmark: landmarkFor(tr(e.location, 'en')),
   }))
 
   const skills = [...new Set([...projects.flatMap((p) => p.technologies), ...experience.flatMap((e) => e.technologies)])].slice(0, 12)
   const f = d.contact.form
+  // Taher's own ranking: Flutter is the main skill, then SwiftUI, then Jetpack Compose.
+  const loadout: LoadoutSkill[] = [
+    { id: 'flutter', name: 'Flutter', monogram: 'Fl', level: 3, color: '#7FA6FF', ...g.tiers.flutter, chips: ['Dart', 'Bloc · Cubit', 'Provider · GetX', 'Clean Architecture', 'MVVM', 'REST · DIO', 'Firebase', 'Method Channel'] },
+    { id: 'swiftui', name: 'SwiftUI', monogram: 'Sw', level: 2, color: '#FF8A5C', ...g.tiers.swiftui, chips: ['Swift', 'UIKit', 'MVVM', 'Clean Architecture', 'Combine', 'async/await', 'Alamofire', 'Kingfisher'] },
+    { id: 'compose', name: 'Jetpack Compose', monogram: 'Jc', level: 1, color: '#9FE0C4', ...g.tiers.compose, chips: ['Kotlin', 'Coroutines · Flow', 'MVVM', 'Clean Architecture', 'Hilt', 'Retrofit', 'Room', 'Material 3'] },
+  ]
 
   const personJsonLd = {
     '@context': 'https://schema.org',
@@ -143,7 +153,7 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
 
       {/* Work */}
       {cards.length ? (
-        <section id="work" aria-labelledby="work-title" className="wrap pb-10 pt-28">
+        <section id="work" aria-labelledby="work-title" className="wrap pb-6 pt-20 md:pb-10 md:pt-28">
           <SectionTitle id="work-title" label={g.workLabel} title={g.workTitle} hint={g.workHint} />
           <div className="mt-12">
             <ProjectCards cards={cards} labels={{ screenshot: g.screenshot, flip: g.flip, back: g.back }} />
@@ -152,17 +162,17 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
       ) : null}
 
       {/* Experience */}
-      {jobs.length ? (
-        <section id="experience" aria-labelledby="exp-title" className="wrap pb-10 pt-28">
+      {stops.length ? (
+        <section id="experience" aria-labelledby="exp-title" className="wrap pb-6 pt-20 md:pb-10 md:pt-28">
           <SectionTitle id="exp-title" label={g.expLabel} title={g.expTitle} hint={g.expHint} />
           <div className="mt-14">
-            <Cartridges jobs={jobs} labels={{ now: g.now, list: g.expList }} />
+            <JourneyMap stops={stops} labels={{ stops: g.expList, stage: g.stage, of: g.of, cleared: g.cleared, current: g.current, here: g.here }} />
           </div>
         </section>
       ) : null}
 
       {/* Articles and videos */}
-      <section id="articles" aria-labelledby="art-title" className="wrap pb-10 pt-28">
+      <section id="articles" aria-labelledby="art-title" className="wrap pb-6 pt-20 md:pb-10 md:pt-28">
         <SectionTitle id="art-title" label={g.artLabel} title={g.artTitle} hint={g.artHint} />
         <ul className="mt-12 grid grid-cols-[repeat(auto-fit,minmax(18rem,1fr))] gap-6">
           {articles.map((a, i) => (
@@ -201,8 +211,16 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
         </p>
       </section>
 
+      {/* Skills */}
+      <section id="skills" aria-labelledby="skills-title" className="wrap pb-6 pt-20 md:pb-10 md:pt-28">
+        <SectionTitle id="skills-title" label={g.skillsLabel} title={g.skillsTitle} hint={g.skillsHint} />
+        <div className="mt-12">
+          <Loadout skills={loadout} equipped={g.equipped} />
+        </div>
+      </section>
+
       {/* Contact */}
-      <section id="contact" aria-labelledby="contact-title" className="wrap pb-20 pt-28">
+      <section id="contact" aria-labelledby="contact-title" className="wrap pb-20 pt-20 md:pt-28">
         <div className="flex flex-wrap gap-10 rounded-[40px] border-2 border-ink bg-orange p-[clamp(1.75rem,5vw,4rem)] shadow-[0_10px_0_var(--ink)]">
           <div className="min-w-0 flex-[1_1_20rem]">
             <p className="mono text-[0.82rem]">{g.contactLabel}</p>
