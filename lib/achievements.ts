@@ -1,7 +1,7 @@
 // A tiny in-memory store for the playful achievements (client only, per visit, nothing stored or sent).
 
-export type AchievementId = 'flip' | 'cart' | 'gamer' | 'hi'
-export const ACHIEVEMENT_IDS: AchievementId[] = ['flip', 'cart', 'gamer', 'hi']
+export type AchievementId = 'flip' | 'cart' | 'gamer' | 'buddy' | 'hi'
+export const ACHIEVEMENT_IDS: AchievementId[] = ['flip', 'cart', 'gamer', 'buddy', 'hi']
 
 type Snapshot = { count: number; last: AchievementId | null; seq: number }
 

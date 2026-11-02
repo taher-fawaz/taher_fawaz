@@ -7,11 +7,9 @@ import { getDictionary } from '@/lib/i18n/dictionaries'
 import { getExperience, getHomeData, getProjects } from '@/lib/content'
 import { pick, tr } from '@/lib/content/localize'
 import { pageMetadata, siteUrl } from '@/lib/site'
-import type { AchievementId } from '@/lib/achievements'
 import { Handheld } from '@/components/game/Handheld'
 import { ProjectCards, type CardData } from '@/components/game/ProjectCards'
 import { Cartridges, type Job } from '@/components/game/Cartridges'
-import { AchievementToast } from '@/components/game/Achievements'
 import { VideoCard } from '@/components/content/VideoCard'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { Ltr } from '@/components/ui/primitives'
@@ -78,7 +76,6 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
 
   const skills = [...new Set([...projects.flatMap((p) => p.technologies), ...experience.flatMap((e) => e.technologies)])].slice(0, 12)
   const f = d.contact.form
-  const achievements = g.ach as Record<AchievementId, [string, string]>
 
   const personJsonLd = {
     '@context': 'https://schema.org',
@@ -95,7 +92,7 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd).replace(/</g, '\\u003c') }} />
 
       {/* Hero + handheld */}
-      <section id="top" aria-labelledby="hero-title" className="wrap flex flex-wrap items-center gap-12 pb-24 pt-16 md:pt-20">
+      <section id="top" aria-labelledby="hero-title" className="wrap flex flex-wrap items-center gap-12 overflow-x-clip pb-24 pt-16 md:pt-20">
         <div className="min-w-0 flex-[999_1_30rem]">
           <p {...enter(0)} className="chip !gap-2.5 !px-3.5 !py-1.5 !text-[0.8rem]">
             <span aria-hidden="true" className="size-2.5 rounded-full bg-green" />
@@ -235,7 +232,6 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
         </div>
       </section>
 
-      <AchievementToast heading={g.unlocked} items={achievements} />
     </>
   )
 }

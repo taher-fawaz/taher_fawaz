@@ -7,6 +7,9 @@ import { fontVariables } from '@/lib/fonts'
 import { siteUrl } from '@/lib/site'
 import { Header } from '@/components/site/Header'
 import { Footer } from '@/components/site/Footer'
+import { Buddy } from '@/components/game/Buddy'
+import { AchievementToast } from '@/components/game/Achievements'
+import type { AchievementId } from '@/lib/achievements'
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
@@ -35,7 +38,8 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   const d = getDictionary(locale)
   return (
     <html lang={locale} dir={dirOf(locale)} className={fontVariables}>
-      <body className="flex min-h-dvh flex-col">
+      {/* Browser extensions (e.g. ColorZilla adds cz-shortcut-listen) edit <body> attributes before React loads. */}
+      <body className="flex min-h-dvh flex-col" suppressHydrationWarning>
         <a href="#main" className="fixed start-3 top-[-4rem] z-50 rounded-full border-2 border-ink bg-yellow px-4 py-2.5 font-semibold text-ink transition-[top] focus:top-3">
           {d.a11y.skip}
         </a>
@@ -44,6 +48,8 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
           {children}
         </main>
         <Footer locale={locale} />
+        <Buddy lines={d.game.buddy} />
+        <AchievementToast heading={d.game.unlocked} items={d.game.ach as Record<AchievementId, [string, string]>} />
       </body>
     </html>
   )
