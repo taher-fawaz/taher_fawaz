@@ -1,28 +1,39 @@
 import Link from 'next/link'
 import { localePath, otherLocale, type Locale } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/dictionaries'
-import { Mark } from '@/components/ui/icons'
-import { DesktopNav, LanguageSwitch, MobileNav, type NavItem } from './Nav'
-import { ThemeToggle } from './ThemeToggle'
+import { AchievementBadge } from '@/components/game/Achievements'
+import { LanguageSwitch } from './Nav'
 
+/** Floating pill bar: plain-word anchors to the home sections, achievements, language, contact. */
 export function Header({ locale }: { locale: Locale }) {
   const d = getDictionary(locale)
-  const keys = ['projects', 'experience', 'blog', 'videos', 'about', 'contact'] as const
-  const items: NavItem[] = keys.map((k) => ({ key: k, href: localePath(locale, `/${k}`), label: d.nav[k] }))
-  const target = otherLocale(locale)
+  const g = d.game
+  const home = localePath(locale)
+  const anchors = [
+    { id: 'work', label: g.menu.work },
+    { id: 'experience', label: g.menu.experience },
+    { id: 'articles', label: g.menu.articles },
+    { id: 'play', label: g.menu.play },
+  ]
   return (
-    <header className="sticky top-0 z-40 border-b border-rule bg-paper/95 backdrop-blur-[6px] supports-[backdrop-filter]:bg-paper/85">
-      <div className="wrap relative flex h-[4.25rem] items-center gap-3 sm:gap-5">
-        <Link href={localePath(locale)} className="me-auto flex items-center gap-2.5 whitespace-nowrap font-display text-[1.15rem] leading-none sm:gap-3 [html[lang=ar]_&]:text-[1.4rem]">
-          <Mark />
-          <span>{d.meta.siteName}</span>
+    <header className="sticky top-3.5 z-40 px-3 sm:px-5">
+      <div className="mx-auto flex max-w-[75rem] items-center gap-2 rounded-full border-2 border-ink bg-surface py-2 pe-2 ps-2.5 shadow-[0_4px_0_var(--ink)] sm:gap-2.5">
+        <Link href={home} className="me-auto flex items-center gap-2.5 whitespace-nowrap text-ink no-underline">
+          <span aria-hidden="true" className="grid size-10 place-items-center rounded-full border-2 border-ink bg-orange font-[family-name:var(--font-unbounded)] text-[0.8rem] font-bold">TF</span>
+          <span className="font-display text-[0.95rem] font-semibold [html[lang=ar]_&]:text-[1.05rem]">{d.meta.siteName}</span>
         </Link>
-        <DesktopNav items={items} label={d.a11y.primaryNav} />
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          <LanguageSwitch target={target} label={d.a11y.switchLang} name={d.langName} />
-          <ThemeToggle labels={{ toDark: d.a11y.themeDark, toLight: d.a11y.themeLight }} />
-          <MobileNav items={[{ key: 'home', href: localePath(locale), label: d.nav.home }, ...items]} labels={{ open: d.a11y.menu, close: d.a11y.closeMenu, nav: d.a11y.primaryNav }} />
-        </div>
+        <nav aria-label={d.a11y.primaryNav} className="hidden lg:block">
+          <ul className="flex gap-0.5">
+            {anchors.map((a) => (
+              <li key={a.id}>
+                <Link href={`${home}#${a.id}`} className="pill text-ink">{a.label}</Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <AchievementBadge label={g.achievements} />
+        <LanguageSwitch target={otherLocale(locale)} label={d.a11y.switchLang} name={d.langName} />
+        <Link href={`${home}#contact`} className="btn btn-dark !min-h-11 !px-4 !text-[0.95rem] !shadow-none sm:!px-5">{d.nav.contact}</Link>
       </div>
     </header>
   )

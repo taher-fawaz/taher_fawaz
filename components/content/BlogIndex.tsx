@@ -26,7 +26,7 @@ export async function BlogIndex({ locale, category }: { locale: Locale; category
                 <Link
                   href={localePath(locale, f.slug ? `/blog/category/${f.slug}` : '/blog')}
                   aria-current={current ? 'page' : undefined}
-                  className="inline-flex min-h-11 items-center rounded-[2px] border border-rule px-4 transition-colors hover:border-forest aria-[current=page]:border-forest aria-[current=page]:bg-forest aria-[current=page]:text-[#f6f1e7] dark:aria-[current=page]:border-gold-lt dark:aria-[current=page]:bg-gold-lt dark:aria-[current=page]:text-night"
+                  className="inline-flex min-h-11 items-center rounded-full border border-rule px-5 transition-colors hover:border-accent-lt aria-[current=page]:border-accent aria-[current=page]:bg-accent aria-[current=page]:font-semibold aria-[current=page]:text-[#04130d]"
                 >
                   {f.label}
                 </Link>

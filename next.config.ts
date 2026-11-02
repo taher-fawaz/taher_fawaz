@@ -15,6 +15,16 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'i.ytimg.com' },
     ],
   },
+  // The site is one page now; old section URLs land on the matching part of the home page.
+  async redirects() {
+    return [
+      { source: '/:locale(en|ar)/projects/:path*', destination: '/:locale#work', permanent: true },
+      { source: '/:locale(en|ar)/experience', destination: '/:locale#experience', permanent: true },
+      { source: '/:locale(en|ar)/about', destination: '/:locale', permanent: true },
+      { source: '/:locale(en|ar)/videos', destination: '/:locale#videos', permanent: true },
+      { source: '/:locale(en|ar)/contact', destination: '/:locale#contact', permanent: true },
+    ]
+  },
   async headers() {
     return [
       // The Studio is an app of its own; keep it out of iframes on other sites.

@@ -4,24 +4,39 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { isLocale, localePath, type Locale } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/dictionaries'
-import { getHomeData } from '@/lib/content'
+import { getExperience, getHomeData, getProjects } from '@/lib/content'
 import { pick, tr } from '@/lib/content/localize'
 import { pageMetadata, siteUrl } from '@/lib/site'
-import { Reveal } from '@/components/motion/Reveal'
-import { Orbit, type OrbitBody } from '@/components/home/Orbit'
-import { ProjectCard } from '@/components/projects/ProjectCard'
-import { ExperienceList } from '@/components/content/ExperienceList'
-import { ArticleList } from '@/components/content/ArticleList'
+import type { AchievementId } from '@/lib/achievements'
+import { Handheld } from '@/components/game/Handheld'
+import { ProjectCards, type CardData } from '@/components/game/ProjectCards'
+import { Cartridges, type Job } from '@/components/game/Cartridges'
+import { AchievementToast } from '@/components/game/Achievements'
 import { VideoCard } from '@/components/content/VideoCard'
-import { SectionHeader, Chip, EmptyState } from '@/components/ui/primitives'
-import { ArrowIcon } from '@/components/ui/icons'
+import { ContactForm } from '@/components/contact/ContactForm'
+import { Ltr } from '@/components/ui/primitives'
+import { ExternalIcon } from '@/components/ui/icons'
 
-// From the CV: the same list feeds the structured data below.
-const SPECIALTIES = ['Flutter', 'Android', 'Kotlin', 'Clean Architecture']
+// Card and cartridge colours cycle through the palette's light tints.
+const TINTS = ['#FF8A5C', '#7FA6FF', '#9FE0C4', '#FFD98A', '#D9C7FF', '#C9D2CF']
 
 export async function generateMetadata({ params }: PageProps<'/[locale]'>): Promise<Metadata> {
   const { locale } = await params
   return isLocale(locale) ? pageMetadata(locale, '/') : {}
+}
+
+const enter = (i: number) => ({ 'data-hero-item': '', style: { '--i': i } as CSSProperties })
+
+function SectionTitle({ id, label, title, hint }: { id: string; label: string; title: string; hint?: string }) {
+  return (
+    <div className="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p className="label">{label}</p>
+        <h2 id={id} className="section-title mt-2.5">{title}</h2>
+      </div>
+      {hint ? <p className="max-w-[36ch] text-muted">{hint}</p> : null}
+    </div>
+  )
 }
 
 export default async function HomePage({ params }: PageProps<'/[locale]'>) {
@@ -29,22 +44,41 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
   if (!isLocale(raw)) notFound()
   const locale: Locale = raw
   const d = getDictionary(locale)
-  const { settings, featuredProjects, experience, articles, videos, categories } = await getHomeData(locale)
-  const current = experience.find((e) => !e.end)
-  const headline = tr(settings.headline, locale) || d.home.headline
+  const g = d.game
+  const [{ settings, articles, videos }, projects, experience] = await Promise.all([getHomeData(locale), getProjects(), getExperience()])
   const intro = pick(settings.intro, locale)
-  const roles = (['engineer', 'educator', 'builder'] as const).map((role) => ({
-    role,
-    title: d.home.roles[role].title,
-    text: tr(settings.roles?.[role], locale) || d.home.roles[role].text,
-    href: localePath(locale, role === 'educator' ? '/blog' : '/projects'),
+  const current = experience.find((e) => !e.end)
+
+  const cards: CardData[] = projects.map((p, i) => ({
+    id: p.id,
+    no: `#${String(i + 1).padStart(3, '0')}`,
+    rarity: p.featured ? g.legendary : g.rare,
+    legendary: p.featured,
+    color: TINTS[i % TINTS.length]!,
+    title: p.title,
+    domain: tr(p.domain, locale),
+    role: tr(p.role, locale),
+    period: p.period,
+    summary: [tr(p.summary, locale), p.contributions[0] ? tr(p.contributions[0], locale) : ''].filter(Boolean).join(' '),
+    stack: p.technologies.slice(0, 5),
+    cover: p.cover ? { url: p.cover.url, alt: tr(p.cover.alt, locale) } : undefined,
   }))
 
-  const orbitBodies: OrbitBody[] = [
-    { role: 'engineer', href: roles[0]!.href, label: roles[0]!.title, index: '01', r: 96, angle: -52 },
-    { role: 'educator', href: roles[1]!.href, label: roles[1]!.title, index: '02', r: 166, angle: 52 },
-    { role: 'builder', href: roles[2]!.href, label: roles[2]!.title, index: '03', r: 236, angle: 148 },
-  ]
+  const jobs: Job[] = experience.map((e, i) => ({
+    id: e.id,
+    short: e.employer.replace(/\s*\(.*\)$/, '').replace(/\s+Co\.$/, ''),
+    company: e.employer,
+    role: tr(e.role, locale),
+    years: `${e.start.slice(0, 4)} – ${e.end ? e.end.slice(0, 4) : d.common.present}`,
+    place: tr(e.location, locale),
+    note: e.highlights[0] ? tr(e.highlights[0], locale) : tr(e.summary, locale),
+    now: !e.end,
+    shell: TINTS[i % TINTS.length]!,
+  }))
+
+  const skills = [...new Set([...projects.flatMap((p) => p.technologies), ...experience.flatMap((e) => e.technologies)])].slice(0, 12)
+  const f = d.contact.form
+  const achievements = g.ach as Record<AchievementId, [string, string]>
 
   const personJsonLd = {
     '@context': 'https://schema.org',
@@ -52,7 +86,7 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
     name: 'Taher Fawaz',
     jobTitle: tr(settings.role, 'en'),
     url: `${siteUrl}${localePath(locale)}`,
-    knowsAbout: [...SPECIALTIES, 'Mobile application development'],
+    knowsAbout: skills,
     sameAs: settings.socials.map((s) => s.url).filter(Boolean),
   }
 
@@ -60,166 +94,148 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd).replace(/</g, '\\u003c') }} />
 
-      {/* 1–2. Hero + the three roles */}
-      <section className="hero on-field bg-field text-field-ink" aria-labelledby="hero-title">
-        {/* Small screens: the same drawing, decorative and cropped behind the copy so the first screen stays text-first. */}
-        <div aria-hidden="true" className="pointer-events-none absolute -end-24 -top-4 w-[22rem] opacity-[0.28] sm:-end-16 sm:w-[28rem] lg:hidden">
-          <Orbit decorative bodies={orbitBodies} label={d.home.rolesLabel} />
-        </div>
-        <div className="wrap relative pt-10 md:pt-16">
-          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,6.3fr)_minmax(0,5.7fr)] lg:gap-10">
-            <div>
-              <p data-hero-item style={{ '--i': 0 } as CSSProperties} className="eyebrow">
-                <span className="whitespace-nowrap">{tr(settings.name, locale)}</span>
-                <span aria-hidden="true" className="text-field-muted max-sm:hidden">/</span>
-                <span className="whitespace-nowrap">{tr(settings.role, locale)}</span>
-              </p>
-              <h1 id="hero-title" data-hero-item style={{ '--i': 1 } as CSSProperties} className="display-1 mt-6 max-w-[16ch] [html[lang=ar]_&]:max-w-[18ch]">{headline}</h1>
-              <p data-hero-item style={{ '--i': 2 } as CSSProperties} className="mt-6 max-w-[54ch] text-[1.02rem] text-field-muted md:mt-7 md:text-[1.12rem]" lang={intro.lang}>
-                {intro.text}
-              </p>
-              <div data-hero-item style={{ '--i': 3 } as CSSProperties} className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
-                <Link href={localePath(locale, '/projects')} className="btn btn-on-field">
-                  {d.home.primaryCta}
-                  <ArrowIcon />
-                </Link>
-                <Link href={localePath(locale, '/blog')} className="tlink">{d.home.secondaryCta}</Link>
-              </div>
-              <div data-hero-item style={{ '--i': 4 } as CSSProperties} className="mt-9 flex max-w-[62ch] flex-col gap-4 border-t border-field-rule pt-4 text-[0.95rem] text-field-muted">
-                {current ? (
-                  <p className="flex flex-wrap items-center gap-3">
-                    <span className="chip">{d.home.now}</span>
-                    <span>
-                      {tr(current.role, locale)} · <bdi dir="ltr">{current.employer}</bdi>
-                    </span>
-                  </p>
-                ) : null}
-                <ul className="flex flex-wrap gap-2" aria-label={d.home.specialties}>
-                  {SPECIALTIES.map((t) => (
-                    <li key={t} className="tag border-field-rule text-field-muted">{t}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div data-hero-item style={{ '--i': 3 } as CSSProperties} className="hidden lg:block">
-              <div className="mx-auto w-full max-w-[37rem]">
-                <Orbit bodies={orbitBodies} label={d.home.rolesLabel} />
-              </div>
-            </div>
+      {/* Hero + handheld */}
+      <section id="top" aria-labelledby="hero-title" className="wrap flex flex-wrap items-center gap-12 pb-24 pt-16 md:pt-20">
+        <div className="min-w-0 flex-[999_1_30rem]">
+          <p {...enter(0)} className="chip !gap-2.5 !px-3.5 !py-1.5 !text-[0.8rem]">
+            <span aria-hidden="true" className="size-2.5 rounded-full bg-green" />
+            {tr(settings.role, locale)}
+          </p>
+          <h1 id="hero-title" {...enter(1)} className="display-1 mt-6">
+            {g.heroA} <mark className="rounded-xl bg-yellow px-[0.12em] text-ink">{g.heroHl}</mark>
+            {g.heroB} <span className="text-orange-ink">{g.heroEnd}</span>
+          </h1>
+          <p {...enter(2)} className="mt-6 max-w-[50ch] text-[1.15rem] text-[#4A4945]" lang={intro.lang}>{intro.text}</p>
+          <div {...enter(3)} className="mt-9 flex flex-wrap gap-3.5">
+            <Link href="#work" className="btn">{g.seeWork} <span aria-hidden="true" className="icon-fwd">→</span></Link>
+            <Link href="#play" className="btn btn-ghost"><span aria-hidden="true">▶</span> {g.play}</Link>
           </div>
+          {current ? (
+            <p {...enter(4)} className="mt-8 text-[0.95rem] text-muted">
+              {g.nowPlaying}: <strong className="text-ink">{tr(current.role, locale)} · <Ltr>{current.employer}</Ltr></strong>
+            </p>
+          ) : null}
+        </div>
+        <div className="flex min-w-0 flex-[1_1_22rem] justify-center">
+          <Handheld
+            labels={g.device}
+            items={[
+              { label: g.menu.work, target: 'work' },
+              { label: g.menu.experience, target: 'experience' },
+              { label: g.menu.articles, target: 'articles' },
+              { label: g.menu.play, target: 'play' },
+              { label: g.menu.contact, target: 'contact' },
+            ]}
+          />
+        </div>
+      </section>
 
-          <h2 className="sr-only">{d.home.rolesLabel}</h2>
-          <ul className="mt-12 grid border-t border-field-rule md:mt-14 md:grid-cols-3">
-            {roles.map((r, i) => (
-              <li key={r.role} className={i > 0 ? 'border-t border-field-rule md:border-s md:border-t-0' : ''}>
-                <Link href={r.href} data-role={r.role} className="role-link group block px-0 py-6 md:px-6 md:py-8">
-                  <span className="meta mb-3 flex items-center gap-3 text-field-muted">
-                    <svg viewBox="0 0 28 8" aria-hidden="true" className="role-key">
-                      <line x1="0" y1="4" x2="28" y2="4" stroke={r.role === 'engineer' ? 'var(--gold-lt)' : 'var(--field-ink)'} strokeOpacity={r.role === 'engineer' ? 1 : 0.6} strokeDasharray={r.role === 'builder' ? '3 3' : undefined} />
-                    </svg>
-                    0{i + 1}
-                  </span>
-                  <h3 className="flex items-center gap-2.5 text-[1.6rem] [html[lang=ar]_&]:text-[1.85rem]">
-                    {r.title}
-                    <ArrowIcon />
-                  </h3>
-                  <p className="mt-2 max-w-[36ch] text-[0.96rem] text-field-muted">
-                    {r.text}
-                    {r.role === 'builder' ? <span className="chip ms-2 align-middle">{d.common.comingSoon}</span> : null}
-                  </p>
-                </Link>
+      {/* Skills strip */}
+      {skills.length ? (
+        <div className="marquee-wrap overflow-hidden border-y-2 border-ink bg-ink text-paper" aria-label={g.skills}>
+          <ul className="marquee flex w-max gap-10 py-4 font-[family-name:var(--font-unbounded)] text-[1.15rem] font-semibold" dir="ltr">
+            {[...skills, ...skills].map((s, i) => (
+              <li key={i} aria-hidden={i >= skills.length} className="flex items-center gap-10 whitespace-nowrap">
+                {s}
+                <span aria-hidden="true" style={{ color: ['#FF5B1F', '#FFC93C', '#7FA6FF'][i % 3] }}>✦</span>
               </li>
             ))}
           </ul>
         </div>
-      </section>
+      ) : null}
 
-      {/* 3. Selected projects */}
-      {featuredProjects.length ? (
-        <section className="wrap py-16 md:py-24" aria-labelledby="projects-title">
-          <Reveal className="contents"><SectionHeader id="projects-title" title={d.home.projects} href={localePath(locale, '/projects')} linkLabel={d.common.allProjects} /></Reveal>
-          <Reveal className="grid gap-y-14 md:grid-cols-12 md:gap-x-10">
-            {featuredProjects.map((p, i) => (
-              <ProjectCard key={p.id} project={p} locale={locale} variant={i === 0 ? 'lead' : 'second'} />
+      {/* Work */}
+      {cards.length ? (
+        <section id="work" aria-labelledby="work-title" className="wrap pb-10 pt-28">
+          <SectionTitle id="work-title" label={g.workLabel} title={g.workTitle} hint={g.workHint} />
+          <div className="mt-12">
+            <ProjectCards cards={cards} labels={{ screenshot: g.screenshot, flip: g.flip, back: g.back }} />
+          </div>
+        </section>
+      ) : null}
+
+      {/* Experience */}
+      {jobs.length ? (
+        <section id="experience" aria-labelledby="exp-title" className="wrap pb-10 pt-28">
+          <SectionTitle id="exp-title" label={g.expLabel} title={g.expTitle} hint={g.expHint} />
+          <div className="mt-14">
+            <Cartridges jobs={jobs} labels={{ now: g.now, list: g.expList }} />
+          </div>
+        </section>
+      ) : null}
+
+      {/* Articles and videos */}
+      <section id="articles" aria-labelledby="art-title" className="wrap pb-10 pt-28">
+        <SectionTitle id="art-title" label={g.artLabel} title={g.artTitle} hint={g.artHint} />
+        <ul className="mt-12 grid grid-cols-[repeat(auto-fit,minmax(18rem,1fr))] gap-6">
+          {articles.map((a, i) => (
+            <li key={a.id}>
+              <Link href={localePath(locale, `/blog/${a.slug}`)} className="hw group block h-full rounded-[26px] p-6 no-underline transition-transform duration-150 hover:-translate-y-0.5">
+                <span className="flex justify-between gap-3">
+                  <span className="label">{a.category ? tr(a.category.title, locale) : d.nav.blog}</span>
+                  {i === 0 ? <span className="chip !bg-green !text-ink">{g.newBadge}</span> : null}
+                </span>
+                <span lang={a.language} dir={a.language === 'ar' ? 'rtl' : 'ltr'} className="hover-underline mt-4 block text-start font-[family-name:var(--font-alexandria)] text-[1.45rem] font-bold leading-relaxed">
+                  {a.title}
+                </span>
+                <span className="mono mt-4 block text-[0.8rem] text-orange-ink">{g.read} <span aria-hidden="true" className="icon-fwd inline-block">→</span></span>
+              </Link>
+            </li>
+          ))}
+          {!videos.length ? (
+            <li className="flex flex-col justify-center rounded-[26px] border-2 border-dashed border-ink p-6">
+              <span className="label">{g.videos}</span>
+              <p className="mt-2.5 font-display text-[1.45rem] font-bold">{g.videosSoon}</p>
+              <p className="mt-1.5 text-muted">{g.videosBody}</p>
+            </li>
+          ) : null}
+        </ul>
+        {videos.length ? (
+          <div className="mt-10 grid grid-cols-2 items-start gap-x-4 gap-y-10 md:grid-cols-[minmax(0,32fr)_minmax(0,9fr)_minmax(0,9fr)] md:gap-x-6">
+            {videos.map((v) => (
+              <div key={v.id} className={v.kind === 'video' ? 'col-span-2 md:col-span-1' : ''}>
+                <VideoCard video={v} locale={locale} sizes={v.kind === 'video' ? '(min-width: 768px) 60vw, 100vw' : '(min-width: 768px) 18vw, 50vw'} />
+              </div>
             ))}
-          </Reveal>
-        </section>
-      ) : null}
-
-      {/* 4. Experience highlights */}
-      {experience.length ? (
-        <section className="rule-top" aria-labelledby="exp-title">
-          <div className="wrap py-16 md:py-24">
-            <Reveal className="contents"><SectionHeader id="exp-title" title={d.home.experience} href={localePath(locale, '/experience')} linkLabel={d.common.fullExperience} /></Reveal>
-            <Reveal>
-              <ExperienceList items={experience} locale={locale} />
-            </Reveal>
           </div>
-        </section>
-      ) : null}
-
-      {/* 5–6. Featured articles + content pillars */}
-      <section className="rule-top" aria-labelledby="writing-title">
-        <div className="wrap py-16 md:py-24">
-          <Reveal className="contents"><SectionHeader id="writing-title" title={d.home.writing} href={localePath(locale, '/blog')} linkLabel={d.common.allArticles} /></Reveal>
-          <div className="grid gap-14 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:gap-20">
-            <Reveal>
-              {articles.length ? <ArticleList items={articles} locale={locale} /> : <EmptyState title={d.empty.articles}>{d.empty.articlesBody}</EmptyState>}
-            </Reveal>
-            <div>
-              <h3 className="mb-4 text-[1.35rem]">{d.home.pillars}</h3>
-              <Reveal as="ul" className="rule-strong">
-                {categories.map((c) => (
-                  <li key={c.slug} data-reveal className="border-b border-rule">
-                    <Link href={localePath(locale, `/blog/category/${c.slug}`)} className="group block py-5">
-                      <span className="flex items-center gap-2 hover-underline font-display text-[1.3rem] [html[lang=ar]_&]:text-[1.45rem]">
-                        {tr(c.title, locale)}
-                        <ArrowIcon size={16} />
-                      </span>
-                      {c.description ? <span className="mt-1 block text-[0.95rem] text-muted">{tr(c.description, locale)}</span> : null}
-                    </Link>
-                  </li>
-                ))}
-              </Reveal>
-            </div>
-          </div>
-        </div>
+        ) : null}
+        <p className="mt-8">
+          <Link href={localePath(locale, '/blog')} className="tlink">{d.common.allArticles} <span aria-hidden="true" className="icon-fwd inline-block">→</span></Link>
+        </p>
       </section>
 
-      {/* 7. Videos and Shorts */}
-      {videos.length ? (
-        <section className="rule-top" aria-labelledby="videos-title">
-          <div className="wrap py-16 md:py-24">
-            <Reveal className="contents"><SectionHeader id="videos-title" title={d.home.videos} href={localePath(locale, '/videos')} linkLabel={d.common.allVideos} /></Reveal>
-            <Reveal className="grid grid-cols-2 items-start gap-x-4 gap-y-10 md:grid-cols-[minmax(0,32fr)_minmax(0,9fr)_minmax(0,9fr)] md:gap-x-6">
-              {videos.map((v) => (
-                <div key={v.id} className={v.kind === 'video' ? 'col-span-2 md:col-span-1' : ''}>
-                  <VideoCard video={v} locale={locale} sizes={v.kind === 'video' ? '(min-width: 768px) 60vw, 100vw' : '(min-width: 768px) 18vw, 50vw'} />
-                </div>
+      {/* Contact */}
+      <section id="contact" aria-labelledby="contact-title" className="wrap pb-20 pt-28">
+        <div className="flex flex-wrap gap-10 rounded-[40px] border-2 border-ink bg-orange p-[clamp(1.75rem,5vw,4rem)] shadow-[0_10px_0_var(--ink)]">
+          <div className="min-w-0 flex-[1_1_20rem]">
+            <p className="mono text-[0.82rem]">{g.contactLabel}</p>
+            <h2 id="contact-title" className="section-title mt-2.5">{g.contactTitle}</h2>
+            <p className="mt-4 max-w-[34ch] text-[1.1rem]">{g.contactBody}</p>
+            <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
+              {settings.email ? <li><a href={`mailto:${settings.email}`} className="font-semibold underline underline-offset-4"><Ltr>{settings.email}</Ltr></a></li> : null}
+              {settings.socials.filter((s) => s.url).map((s) => (
+                <li key={s.platform}>
+                  <a href={s.url} target="_blank" rel="noopener noreferrer me" className="inline-flex items-center gap-1.5 font-semibold underline underline-offset-4"><Ltr>{s.platform}</Ltr><ExternalIcon size={15} /></a>
+                </li>
               ))}
-            </Reveal>
+            </ul>
+            <p className="mt-6 text-[0.92rem]">{d.contact.location}: {tr(settings.location, locale)}</p>
           </div>
-        </section>
-      ) : null}
-
-      {/* 8. Contact */}
-      <section className="on-night bg-night text-night-ink" aria-labelledby="close-title">
-        <div className="wrap py-20 md:py-28">
-          <h2 id="close-title" className="max-w-[20ch] text-[clamp(2rem,5vw,3.6rem)] leading-[1.1] tracking-[-0.015em] [html[lang=ar]_&]:max-w-none [html[lang=ar]_&]:leading-[1.4] [html[lang=ar]_&]:tracking-normal">
-            {d.home.closeTitle}
-          </h2>
-          <div className="mt-8 flex flex-wrap items-center gap-6">
-            <Link href={localePath(locale, '/contact')} className="btn btn-on-night">
-              {d.home.closeCta}
-              <ArrowIcon />
-            </Link>
-            {settings.socials.filter((s) => s.url).map((s) => (
-              <a key={s.platform} href={s.url} target="_blank" rel="noopener noreferrer me" className="text-night-muted underline underline-offset-4 hover:text-night-ink">{s.platform}</a>
-            ))}
-            {settings.socials.every((s) => !s.url) ? <Chip>{d.contact.linkPending}</Chip> : null}
+          <div className="min-w-0 flex-[999_1_26rem]">
+            <ContactForm
+              locale={locale}
+              copy={{
+                name: f.name, email: f.email, topic: f.topic, message: f.message, choose: f.choose, send: f.send, sending: f.sending, privacy: f.privacy,
+                topics: f.topics,
+                errors: f.errors,
+                status: { invalid: f.fixErrors, sent: f.success, failed: f.failed, 'not-configured': f.notConfigured, rejected: f.spam },
+              }}
+            />
           </div>
         </div>
       </section>
+
+      <AchievementToast heading={g.unlocked} items={achievements} />
     </>
   )
 }

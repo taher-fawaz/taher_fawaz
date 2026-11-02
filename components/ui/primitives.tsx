@@ -2,10 +2,13 @@ import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { ArrowIcon } from './icons'
 
-export function SectionHeader({ title, href, linkLabel, id }: { title: string; href?: string; linkLabel?: string; id?: string }) {
+export function SectionHeader({ title, href, linkLabel, id, index }: { title: string; href?: string; linkLabel?: string; id?: string; index?: string }) {
   return (
-    <div data-reveal className="mb-8 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-3 md:mb-12">
-      <h2 id={id} className="section-title">{title}</h2>
+    <div data-reveal className="mb-10 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 md:mb-14">
+      <div>
+        {index ? <p className="label mb-3 flex items-center gap-3"><span className="meta">{index}</span><span aria-hidden="true" className="h-px w-8 bg-accent" /></p> : null}
+        <h2 id={id} className="section-title">{title}</h2>
+      </div>
       {href && linkLabel ? (
         <Link href={href} className="tlink">
           {linkLabel}
@@ -18,7 +21,7 @@ export function SectionHeader({ title, href, linkLabel, id }: { title: string; h
 
 export function PageHeader({ title, lead, children }: { title: string; lead?: ReactNode; children?: ReactNode }) {
   return (
-    <header className="pb-8 pt-12 md:pb-12 md:pt-20">
+    <header className="pb-8 pt-14 md:pb-12 md:pt-24">
       <h1 className="display-2 max-w-[18ch] [html[lang=ar]_&]:max-w-none">{title}</h1>
       {lead ? <p className="mt-5 max-w-[60ch] text-lg text-muted">{lead}</p> : null}
       {children}

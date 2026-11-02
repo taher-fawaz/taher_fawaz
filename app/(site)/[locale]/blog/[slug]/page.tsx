@@ -63,7 +63,7 @@ export default async function ArticlePage({ params }: PageProps<'/[locale]/blog/
         <h1
           lang={article.language}
           dir={isAr ? 'rtl' : 'ltr'}
-          className={`mt-6 text-start text-[clamp(2rem,4.8vw,3.4rem)] ${article.language === locale ? 'max-w-[26ch]' : ''} ${isAr ? 'font-ar-display font-bold leading-[1.45]' : 'font-[family-name:var(--font-fraunces)] font-medium leading-[1.12] tracking-[-0.015em]'}`}
+          className={`mt-6 text-start text-[clamp(2rem,4.8vw,3.4rem)] ${article.language === locale ? 'max-w-[26ch]' : ''} ${isAr ? 'font-ar-display font-bold leading-[1.45]' : 'font-display font-bold leading-[1.15] tracking-[-0.03em]'}`}
         >
           {article.title}
         </h1>
