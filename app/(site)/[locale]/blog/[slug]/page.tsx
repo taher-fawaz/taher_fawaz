@@ -6,7 +6,7 @@ import { isLocale, localePath, locales, type Locale } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/dictionaries'
 import { getArticle, getArticles } from '@/lib/content'
 import { formatDate, tr } from '@/lib/content/localize'
-import { pageMetadata, siteUrl } from '@/lib/site'
+import { pageMetadata, shareImage, siteUrl } from '@/lib/site'
 import { BackIcon } from '@/components/ui/icons'
 import { Chip } from '@/components/ui/primitives'
 import { PortableBody } from '@/components/content/PortableBody'
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/blog/[sl
   if (!isLocale(locale)) return {}
   const a = await getArticle(slug)
   if (!a) return {}
-  const base = pageMetadata(locale, `/blog/${slug}`, { title: a.seo?.title || a.title, description: a.seo?.description || a.excerpt, languages: alternates(a), type: 'article', noindex: a.isSample })
+  const base = pageMetadata(locale, `/blog/${slug}`, { title: a.seo?.title || a.title, description: a.seo?.description || a.excerpt, languages: alternates(a), type: 'article', noindex: a.isSample, image: shareImage(a.cover, tr(a.cover?.alt, locale) || a.title) })
   // Canonical is the article in its own language, even when viewed inside the other UI language.
   return { ...base, alternates: { ...base.alternates, canonical: localePath(a.language, `/blog/${a.slug}`) } }
 }

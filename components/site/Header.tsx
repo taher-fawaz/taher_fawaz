@@ -27,7 +27,7 @@ export function Header({ locale }: { locale: Locale }) {
           <ul className="flex gap-0.5">
             {anchors.map((a) => (
               <li key={a.id}>
-                <Link href={`${home}#${a.id}`} className="pill !px-3 text-ink xl:!px-4">{a.label}</Link>
+                <Link href={`${home}#${a.id}`} className="pill !px-3 xl:!px-4">{a.label}</Link>
               </li>
             ))}
           </ul>
