@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img">
+  <title>Clean Architecture in Flutter: UI and Data layers depend inward on the Domain core</title>
+  <rect width="1600" height="900" fill="#173a2b"/>
+  <g fill="none" stroke="#f6f1e7" stroke-opacity="0.07" stroke-width="1">
+    <path d="M0 150H1600M0 300H1600M0 450H1600M0 600H1600M0 750H1600"/>
+    <path d="M200 0V900M400 0V900M600 0V900M800 0V900M1000 0V900M1200 0V900M1400 0V900"/>
+  </g>
+  <g transform="translate(1130 450)">
+    <circle r="340" fill="#1f4d3a" stroke="#f6f1e7" stroke-opacity="0.55" stroke-width="2"/>
+    <circle r="240" fill="#173a2b" stroke="#f6f1e7" stroke-opacity="0.75" stroke-width="2"/>
+    <circle r="130" fill="#d4ac55" stroke="#f6f1e7" stroke-width="2"/>
+    <g font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="28" font-weight="700" text-anchor="middle">
+      <text y="-290" fill="#f6f1e7">UI</text>
+      <text y="-192" fill="#f6f1e7">Data</text>
+      <text y="10" fill="#173a2b">Domain</text>
+    </g>
+  </g>
+  <g font-family="Fraunces, Georgia, 'Times New Roman', serif" fill="#f6f1e7">
+    <text x="100" y="400" font-size="96" font-weight="500">Clean</text>
+    <text x="100" y="510" font-size="96" font-weight="500">Architecture</text>
+    <text x="100" y="600" font-size="48" fill="#d4ac55">in Flutter</text>
+  </g>
+  <rect x="100" y="640" width="120" height="6" fill="#d4ac55"/>
+</svg>

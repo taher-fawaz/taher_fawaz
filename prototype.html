@@ -1,0 +1,1021 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taher Fawaz — Design prototype</title>
+<meta name="description" content="Design prototype for the Taher Fawaz personal brand website. Sample content only.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ───────── Tokens (carried from style-tile.html, adjusted) ───────── */
+:root{
+  --paper:#F6F1E7; --paper-2:#EDE6D6; --ink:#11171A; --muted:#4A5654;
+  --forest:#1F4D3A; --gold:#B38A2E; --gold-lt:#D4AC55; --night:#0E1512;
+  --field:#1F4D3A; --field-ink:#F6F1E7; --field-muted:rgba(246,241,231,.8); --field-rule:rgba(246,241,231,.28);
+  --link:#1F4D3A; --mark:#7A5C14; --rule:rgba(17,23,26,.16); --focus:#1F4D3A; --err:#9B2C20;
+  --f-display:"Fraunces",Georgia,serif; --f-ui:"Inter",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,monospace;
+  --f-ar-display:"Amiri","Noto Naskh Arabic",serif; --f-ar-ui:"IBM Plex Sans Arabic","Inter",system-ui,sans-serif;
+  --ease:cubic-bezier(.2,0,0,1);
+}
+:root[data-theme="dark"]{
+  --paper:#0E1512; --paper-2:#15201B; --ink:#EDE7D8; --muted:#A5B0AA;
+  --field:#14352A; --link:#7DBE9C; --mark:#D4AC55; --rule:rgba(237,231,216,.18); --focus:#D4AC55; --gold:#D4AC55; --err:#F0897C;
+}
+:root[lang="en"]{--display:var(--f-display);--ui:var(--f-ui);--body-size:17px;--body-lh:1.6;--ar-scale:1}
+:root[lang="ar"]{--display:var(--f-ar-display);--ui:var(--f-ar-ui);--body-size:18px;--body-lh:1.85}
+html[lang="en"] .ar,html[lang="ar"] .en{display:none!important}
+
+*{box-sizing:border-box;margin:0}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:88px;overflow-x:clip}
+body{background:var(--paper);color:var(--ink);font:400 var(--body-size)/var(--body-lh) var(--ui);-webkit-font-smoothing:antialiased;transition:background-color .2s,color .2s;min-height:100vh;display:flex;flex-direction:column}
+main{flex:1}
+a{color:inherit}
+p,li{text-wrap:pretty}
+h1,h2,h3{font-family:var(--display);font-weight:500;text-wrap:balance}
+:root[lang="ar"] h1,:root[lang="ar"] h2,:root[lang="ar"] h3{font-weight:700}
+button,input,select,textarea{font:inherit;color:inherit}
+::selection{background:var(--forest);color:#F6F1E7}
+:root[data-theme="dark"] ::selection{background:var(--gold-lt);color:#0E1512}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:2px}
+.field :focus-visible,.night :focus-visible{outline-color:var(--gold-lt)}
+html{scrollbar-color:var(--muted) var(--paper)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;inset-inline-start:12px;top:-60px;background:var(--forest);color:#F6F1E7;padding:10px 14px;z-index:100;border-radius:2px;transition:top .15s}
+.skip:focus{top:12px}
+.wrap{max-width:1200px;margin-inline:auto;padding-inline:clamp(16px,4vw,32px)}
+.mono{font-family:var(--f-mono);font-size:.78em;letter-spacing:0;direction:ltr;unicode-bidi:isolate;display:inline-block}
+.muted{color:var(--muted)}
+.flip{transition:transform .15s var(--ease)}
+:root[dir="rtl"] .flip{transform:scaleX(-1)}
+svg.i{width:1.1em;height:1.1em;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.18em}
+
+/* chips: honest labelling of what is verified vs sample */
+.chip{display:inline-block;font:500 12px/1 var(--ui);padding:5px 8px;border:1px solid currentColor;border-radius:2px;white-space:nowrap;vertical-align:middle}
+.chip.cv{color:var(--link)} .chip.draft,.chip.ph,.chip.confirm{color:var(--mark)}
+.field .chip.cv{color:var(--gold-lt)} .field .chip.draft{color:var(--gold-lt)}
+
+/* ───────── Prototype strip + header ───────── */
+.strip{background:var(--night);color:#EDE7D8;font-size:13px;line-height:1.4;padding:8px 0;text-align:center}
+header.site{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:1px solid var(--rule)}
+.bar{display:flex;align-items:center;gap:20px;height:68px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font:500 19px/1 var(--display);margin-inline-end:auto;white-space:nowrap}
+@media (max-width:420px){.bar{gap:10px}.brand{font-size:17px;gap:8px}.brand svg{width:26px;height:26px}.tools{gap:6px}.tbtn{padding:0 10px}}
+:root[lang="ar"] .brand{font-size:23px}
+nav.main ul{display:flex;gap:26px;list-style:none;padding:0;font-size:15px}
+nav.main a{text-decoration:none;padding:8px 0;background:linear-gradient(var(--gold),var(--gold)) 0 100%/0 2px no-repeat;transition:background-size .2s var(--ease)}
+:root[dir="rtl"] nav.main a{background-position:100% 100%}
+nav.main a:hover,nav.main a[aria-current="page"]{background-size:100% 2px}
+.tools{display:flex;gap:8px;align-items:center}
+.tbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:44px;height:44px;padding:0 12px;background:none;border:1px solid var(--rule);border-radius:2px;cursor:pointer;font-size:14px;transition:border-color .15s,background-color .15s}
+.tbtn:hover{border-color:var(--forest);background:var(--paper-2)}
+.tbtn:active{transform:scale(.96)}
+#menuBtn{display:none}
+.mnav{display:none;border-top:1px solid var(--rule);background:var(--paper)}
+.mnav ul{list-style:none;padding:8px 0 16px}
+.mnav a{display:block;padding:14px 0;text-decoration:none;font-size:18px;border-bottom:1px solid var(--rule)}
+.mnav a[aria-current="page"]{color:var(--link);font-weight:600}
+@media (max-width:900px){nav.main{display:none}#menuBtn{display:inline-flex}.mnav.open{display:block}}
+
+/* ───────── Buttons & links ───────── */
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 22px;background:var(--forest);color:#F6F1E7;border:0;border-radius:2px;text-decoration:none;font-weight:500;font-size:16px;cursor:pointer;transition:background-color .15s,transform .15s}
+:root[data-theme="dark"] .btn{background:var(--gold-lt);color:#0E1512}
+.btn:hover{background:#17392B}
+:root[data-theme="dark"] .btn:hover{background:#E4BE6A}
+.btn:active{transform:scale(.96)}
+.btn.on-field{background:var(--field-ink);color:var(--forest)}
+.btn.on-field:hover{background:#fff}
+.btn[disabled]{opacity:.6;cursor:progress}
+.tlink{display:inline-flex;align-items:center;gap:8px;color:var(--link);text-decoration:underline;text-decoration-color:var(--gold);text-decoration-thickness:2px;text-underline-offset:6px;font-weight:500}
+.tlink:hover{text-decoration-color:currentColor}
+.field .tlink,.night .tlink{color:var(--field-ink)}
+.tlink:hover .flip{transform:translateX(3px)}
+:root[dir="rtl"] .tlink:hover .flip{transform:scaleX(-1) translateX(3px)}
+
+/* ───────── Views ───────── */
+.view{display:none}
+.view.on{display:block;animation:vin .22s var(--ease)}
+@keyframes vin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+section.blk{padding:clamp(56px,8vw,104px) 0;border-top:1px solid var(--rule)}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:24px;margin-bottom:clamp(28px,4vw,48px);flex-wrap:wrap}
+h2.sec{font-size:clamp(30px,4vw,44px);line-height:1.12;letter-spacing:-.015em}
+:root[lang="ar"] h2.sec{letter-spacing:0;line-height:1.35}
+.page-head{padding:clamp(48px,7vw,88px) 0 clamp(28px,4vw,48px)}
+.page-head h1{font-size:clamp(40px,6vw,72px);line-height:1.05;letter-spacing:-.02em;max-width:18ch}
+:root[lang="ar"] .page-head h1{letter-spacing:0;line-height:1.3;max-width:none}
+.page-head p.lead{margin-top:20px;color:var(--muted);max-width:60ch;font-size:1.1em}
+
+/* ───────── HOME: hero ───────── */
+.field{background:var(--field);color:var(--field-ink);--focus:#D4AC55}
+.hero{padding:clamp(40px,6vw,80px) 0 0;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,5vw,72px);align-items:center}
+.hero h1{font-size:clamp(42px,6.4vw,84px);line-height:1.02;letter-spacing:-.022em}
+:root[lang="ar"] .hero h1{font-size:clamp(40px,6.2vw,80px);line-height:1.3;letter-spacing:0}
+.hero .lede{margin-top:28px;max-width:54ch;color:var(--field-muted);font-size:1.12em}
+.hero .cta{display:flex;gap:24px;align-items:center;flex-wrap:wrap;margin-top:36px}
+.now{margin-top:36px;padding-top:18px;border-top:1px solid var(--field-rule);display:flex;gap:12px;flex-wrap:wrap;align-items:center;color:var(--field-muted);font-size:.95em;max-width:60ch}
+.orbit{width:100%;max-width:520px;margin-inline:auto;display:block;overflow:visible}
+.orbit .ring{fill:none;stroke:var(--field-rule);stroke-width:1;transition:stroke .2s,stroke-width .2s;stroke-dasharray:1600;stroke-dashoffset:0}
+.orbit .core{fill:var(--gold-lt)}
+.orbit .body a{cursor:pointer}
+.orbit .body circle{fill:var(--field);stroke:var(--gold-lt);stroke-width:1.5;transition:r .2s var(--ease),fill .2s}
+.orbit .body text{fill:var(--field-ink);font:500 15px var(--f-ui);text-anchor:middle;paint-order:stroke;stroke:var(--field);stroke-width:5px}
+:root[lang="ar"] .orbit .body text{font:600 18px var(--f-ar-ui)}
+.orbit[data-active="engineer"] .r-engineer,.orbit[data-active="educator"] .r-educator,.orbit[data-active="builder"] .r-builder{stroke:var(--gold-lt);stroke-width:1.5}
+.orbit[data-active="engineer"] #b-engineer circle,.orbit[data-active="educator"] #b-educator circle,.orbit[data-active="builder"] #b-builder circle{r:13;fill:var(--gold-lt)}
+@media (prefers-reduced-motion:no-preference){
+  .orbit .ring{animation:draw 1.4s var(--ease) both}
+  .orbit .r-educator{animation-delay:.15s}.orbit .r-builder{animation-delay:.3s}
+  @keyframes draw{from{stroke-dashoffset:1600}to{stroke-dashoffset:0}}
+  .hero .reveal{animation:rise .6s var(--ease) both}
+  .hero .reveal:nth-child(2){animation-delay:.08s}.hero .reveal:nth-child(3){animation-delay:.16s}.hero .reveal:nth-child(4){animation-delay:.24s}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+}
+.roles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--field-rule)}
+.role{display:block;padding:24px clamp(0px,2vw,24px) 32px 0;text-decoration:none;transition:background-color .2s}
+:root[dir="rtl"] .role{padding:24px 0 32px clamp(0px,2vw,24px)}
+.role+.role{padding-inline-start:clamp(0px,2vw,24px);border-inline-start:1px solid var(--field-rule)}
+.role h3{font-size:26px;display:flex;align-items:center;gap:10px}
+:root[lang="ar"] .role h3{font-size:30px}
+.role p{margin-top:8px;color:var(--field-muted);font-size:.95em;max-width:34ch}
+.role:hover h3 .flip{transform:translateX(4px)}
+:root[dir="rtl"] .role:hover h3 .flip{transform:scaleX(-1) translateX(4px)}
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .orbit{max-width:380px}
+  .roles{grid-template-columns:1fr}
+  .role,:root[dir="rtl"] .role{padding:20px 0}
+  .role+.role,:root[dir="rtl"] .role+.role{padding-inline-start:0;border-inline-start:0;border-top:1px solid var(--field-rule)}
+}
+
+/* HOME: projects (deliberately unequal) */
+.proj-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:clamp(16px,3vw,40px);align-items:start}
+.proj{display:block;text-decoration:none;grid-column:span 7}
+.proj.second{grid-column:span 5;margin-top:clamp(0px,9vw,120px)}
+.plate{position:relative;background:var(--paper-2);border:1px solid var(--rule);transition:border-color .2s;overflow:hidden}
+.plate svg{display:block;width:100%;height:auto}
+.plate .lbl{position:absolute;inset-inline:0;bottom:0;padding:10px 14px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.proj:hover .plate{border-color:var(--forest)}
+.proj h3{font-size:clamp(28px,3.4vw,40px);margin-top:20px;line-height:1.1}
+:root[lang="ar"] .proj h3{line-height:1.35}
+.proj .where{margin-top:8px;color:var(--muted);font-size:.95em}
+.proj p.sum{margin-top:8px;max-width:46ch}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.tags span{font:400 12px var(--f-mono);direction:ltr;border:1px solid var(--rule);padding:4px 8px;color:var(--muted)}
+.proj .go{margin-top:16px;display:inline-flex;gap:8px;color:var(--link);font-weight:500}
+@media (max-width:900px){.proj,.proj.second{grid-column:1/-1;margin-top:0}.proj.second{margin-top:48px}}
+
+/* ledger (experience) */
+.ledger{list-style:none;padding:0;border-top:1px solid var(--ink)}
+.ledger li{display:grid;grid-template-columns:minmax(150px,200px) minmax(0,1fr) minmax(0,auto);gap:12px 32px;padding:22px 0;border-bottom:1px solid var(--rule);align-items:baseline}
+.ledger .dates{color:var(--muted);font-size:.9em}
+.ledger h3{font-size:22px;line-height:1.25}
+:root[lang="ar"] .ledger h3{font-size:24px}
+.ledger .role-t{color:var(--muted)}
+.ledger .where{color:var(--muted);font-size:.92em;text-align:end}
+.ledger ul.hl{margin-top:10px;padding-inline-start:1.1em;color:var(--ink);font-size:.95em;max-width:68ch}
+.ledger ul.hl li{display:list-item;border:0;padding:2px 0;grid-template-columns:none}
+@media (max-width:700px){.ledger li{grid-template-columns:1fr}.ledger .where{text-align:start}}
+
+/* writing */
+.write-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(32px,6vw,88px)}
+.alist{list-style:none;padding:0;border-top:1px solid var(--ink)}
+.alist a{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px 24px;padding:24px 0;border-bottom:1px solid var(--rule);text-decoration:none}
+.alist .d{color:var(--muted);font-size:.9em;padding-top:.35em}
+.alist h3{font-size:clamp(22px,2.4vw,28px);line-height:1.25;transition:color .15s}
+:root[lang="ar"] .alist h3{line-height:1.5}
+.alist a:hover h3{color:var(--link)}
+.alist .ex{color:var(--muted);font-size:.95em;margin-top:6px;max-width:62ch}
+.alist .meta{margin-top:10px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:.88em;color:var(--muted)}
+.ar-block{display:block;direction:rtl;text-align:start;font-family:var(--f-ar-display);font-weight:700;line-height:1.5}
+.ar-block.ex{font-family:var(--f-ar-ui);font-weight:400;line-height:1.8}
+.pillars{list-style:none;padding:0}
+.pillars li{padding:20px 0;border-top:1px solid var(--rule)}
+.pillars li:first-child{border-top:1px solid var(--ink)}
+.pillars h3{font-size:22px}
+:root[lang="ar"] .pillars h3{font-size:24px}
+.pillars p{color:var(--muted);font-size:.95em;margin-top:4px}
+@media (max-width:900px){.write-grid{grid-template-columns:1fr}.alist a{grid-template-columns:1fr}}
+
+/* videos */
+.vrow{display:flex;gap:clamp(12px,2vw,24px);align-items:flex-start;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}
+.vitem{flex:none;scroll-snap-align:start;--h:clamp(220px,26vw,320px)}
+.vthumb{display:block;position:relative;height:var(--h);background:var(--night);color:#EDE7D8;border:1px solid var(--rule);cursor:pointer;width:100%;overflow:hidden;text-align:start;padding:0}
+.vitem.land .vthumb{aspect-ratio:16/9;height:auto;min-width:min(78vw,520px)}
+.vitem.short .vthumb{aspect-ratio:9/16;height:var(--h)}
+.vthumb .play{position:absolute;inset:0;display:grid;place-items:center}
+.vthumb .play span{width:56px;height:56px;border:1.5px solid var(--gold-lt);border-radius:50%;display:grid;place-items:center;color:var(--gold-lt);transition:background-color .2s,color .2s,transform .2s var(--ease)}
+.vthumb:hover .play span{background:var(--gold-lt);color:#0E1512;transform:scale(1.06)}
+.vthumb .cap{position:absolute;inset-inline:0;bottom:0;padding:12px 14px;font-size:12px;color:#B9C3BD;display:flex;justify-content:space-between;gap:8px}
+.vthumb .loaded-msg{display:none;position:absolute;inset:0;padding:18px;font-size:14px;line-height:1.5;align-content:center;background:var(--night);color:#EDE7D8}
+.vthumb.loaded .loaded-msg{display:grid;gap:8px}
+.vthumb.loaded .play,.vthumb.loaded .cap{display:none}
+.vitem.land{width:min(78vw,520px)}
+.vitem.short{width:calc(var(--h)*9/16)}
+.vtitle{margin-top:12px;font-size:1em;line-height:1.5;font-weight:500}
+.vtitle.ar-t{font-family:var(--f-ar-ui);direction:rtl;text-align:start}
+.vmeta{margin-top:4px;color:var(--muted);font-size:.85em;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.vgrid{display:flex;flex-wrap:wrap;gap:clamp(20px,3vw,40px) clamp(16px,2.4vw,32px);align-items:flex-start}
+
+/* contact close */
+.night{background:var(--night);color:#EDE7D8;--focus:#D4AC55}
+.close{padding:clamp(64px,9vw,120px) 0}
+.close h2{font-size:clamp(32px,5vw,60px);line-height:1.1;max-width:20ch;letter-spacing:-.015em}
+:root[lang="ar"] .close h2{line-height:1.4;max-width:none;letter-spacing:0}
+.close .row{display:flex;gap:28px;align-items:center;flex-wrap:wrap;margin-top:32px}
+.night .btn{background:var(--gold-lt);color:#0E1512}.night .btn:hover{background:#E4BE6A}
+.ph-link{color:#B9C3BD;font-size:.95em;border-bottom:1px dashed #5b6a63}
+
+footer.site{border-top:1px solid var(--rule);padding:36px 0;font-size:.9em;color:var(--muted)}
+footer.site .wrap{display:flex;gap:16px 40px;flex-wrap:wrap;justify-content:space-between}
+.legend{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ───────── About ───────── */
+.about-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(32px,6vw,88px);padding-bottom:clamp(56px,8vw,96px)}
+.prose{max-width:62ch}
+.prose p+p{margin-top:1em}
+.prose h2{font-size:28px;margin:2em 0 .5em}
+:root[lang="ar"] .prose h2{font-size:32px}
+.dl{border-top:1px solid var(--ink)}
+.dl div{padding:16px 0;border-bottom:1px solid var(--rule)}
+.dl dt{font-weight:600}
+.dl dd{margin:2px 0 0;color:var(--muted);font-size:.95em}
+.princ{list-style:none;padding:0;counter-reset:p}
+.princ li{padding:18px 0;border-top:1px solid var(--rule)}
+.princ b{font-family:var(--display);font-size:1.25em;font-weight:500;display:block}
+@media (max-width:900px){.about-grid{grid-template-columns:1fr}}
+
+/* ───────── Project detail ───────── */
+.pd-meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px 32px;border-top:1px solid var(--ink);padding-top:20px;margin-top:32px}
+.pd-meta dt{color:var(--muted);font-size:.85em}
+.pd-meta dd{margin:2px 0 0;font-weight:500}
+.shots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,2vw,28px);margin:48px 0}
+.shots .plate:nth-child(2){margin-top:40px}
+.pd-cols{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(32px,6vw,88px);padding-bottom:clamp(56px,8vw,96px)}
+.todo{border:1px dashed var(--muted);padding:20px;color:var(--muted);margin-top:32px;font-size:.95em}
+.plain{padding-inline-start:1.2em}.plain li{padding:4px 0}
+.more-list{list-style:none;padding:0;border-top:1px solid var(--ink)}
+.more-list li{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr) auto;gap:8px 24px;padding:16px 0;border-bottom:1px solid var(--rule);align-items:baseline}
+.more-list b{font-family:var(--display);font-weight:500;font-size:1.15em}
+@media (max-width:900px){.pd-meta{grid-template-columns:1fr 1fr}.shots{grid-template-columns:1fr 1fr}.shots .plate:nth-child(2){margin-top:0}.pd-cols{grid-template-columns:1fr}.more-list li{grid-template-columns:1fr}}
+
+/* ───────── Blog ───────── */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.fbtn{min-height:44px;padding:0 16px;background:none;border:1px solid var(--rule);border-radius:2px;cursor:pointer;transition:border-color .15s,background-color .15s,color .15s}
+.fbtn:hover{border-color:var(--forest)}
+.fbtn[aria-pressed="true"]{background:var(--forest);color:#F6F1E7;border-color:var(--forest)}
+:root[data-theme="dark"] .fbtn[aria-pressed="true"]{background:var(--gold-lt);color:#0E1512;border-color:var(--gold-lt)}
+.fbtn:active{transform:scale(.96)}
+.empty{padding:32px 0;color:var(--muted)}
+
+/* article detail */
+.art-head{padding:clamp(40px,6vw,72px) 0 24px}
+.art-head h1{font-size:clamp(34px,5vw,56px);line-height:1.12;max-width:24ch}
+.art-head h1.rtl{font-family:var(--f-ar-display);font-weight:700;line-height:1.45;max-width:none}
+.art-meta{display:flex;gap:12px 20px;flex-wrap:wrap;align-items:center;margin-top:20px;color:var(--muted);font-size:.92em}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:2px}
+.seg button{min-height:44px;padding:0 16px;background:none;border:0;cursor:pointer;transition:background-color .15s,color .15s}
+.seg button+button{border-inline-start:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--forest);color:#F6F1E7}
+:root[data-theme="dark"] .seg button[aria-pressed="true"]{background:var(--gold-lt);color:#0E1512}
+.seg button[disabled]{opacity:.45;cursor:not-allowed}
+.art-body{max-width:68ch;margin-bottom:56px}
+.art-body.ab-ar{font-family:var(--f-ar-ui);font-size:19px;line-height:1.95}
+.art-body.ab-en{font-size:18px;line-height:1.7}
+html[lang="en"] .art-body.ab-ar{margin-left:auto;margin-right:0}
+html[lang="ar"] .art-body.ab-en,html[lang="ar"] .art-head h1:not(.rtl){margin-right:auto;margin-left:0}
+.art-body h2{font-size:28px;margin:1.6em 0 .5em}
+.art-body.ab-ar h2{font-family:var(--f-ar-display);font-size:34px;line-height:1.5}
+.art-body p+p{margin-top:1em}
+.art-body pre{direction:ltr;text-align:left;background:var(--paper-2);border:1px solid var(--rule);padding:16px;overflow-x:auto;margin:1.4em 0;font:400 14px/1.6 var(--f-mono)}
+.art-body blockquote{margin:1.4em 0;padding:4px 0;border-block:1px solid var(--rule);font-family:var(--display);font-size:1.2em}
+.art-body.ab-ar blockquote{font-family:var(--f-ar-display);font-size:1.35em}
+.rel{border-top:1px solid var(--ink);padding:20px 0 64px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.rel a{text-decoration:none;display:block;padding:12px 0}
+.rel .k{color:var(--muted);font-size:.85em}
+.rel .v{font-family:var(--display);font-size:22px}
+@media (max-width:700px){.rel{grid-template-columns:1fr}}
+
+/* ───────── Contact ───────── */
+.contact-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,6vw,88px);padding-bottom:clamp(56px,8vw,96px)}
+form.cf{display:grid;gap:20px}
+.fld label{display:block;font-weight:500;margin-bottom:6px}
+.fld input,.fld select,.fld textarea{width:100%;min-height:48px;background:var(--paper);border:1px solid var(--muted);border-radius:2px;padding:10px 12px;transition:border-color .15s,box-shadow .15s}
+.fld textarea{min-height:160px;resize:vertical}
+.fld input:hover,.fld select:hover,.fld textarea:hover{border-color:var(--forest)}
+.fld input:focus-visible,.fld select:focus-visible,.fld textarea:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+.fld [aria-invalid="true"]{border-color:var(--err)}
+.err{color:var(--err);font-size:.9em;margin-top:6px;display:none}
+.fld.bad .err{display:block}
+.hp{position:absolute;inset-inline-start:-9999px;width:1px;height:1px;overflow:hidden}
+.note{font-size:.88em;color:var(--muted)}
+.status{border:1px solid var(--rule);padding:16px 18px;display:none;font-size:.95em}
+.status.show{display:block}
+.status.ok{border-color:var(--forest)}.status.fail{border-color:var(--err)}
+.proto-ctl{border:1px dashed var(--muted);padding:12px 14px;font-size:.88em;color:var(--muted)}
+.soc{list-style:none;padding:0;border-top:1px solid var(--ink);margin-top:32px}
+.soc li{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+@media (max-width:900px){.contact-grid{grid-template-columns:1fr}}
+
+/* ───────── Admin (always LTR, like Sanity Studio) ───────── */
+#v-admin{--a-bg:var(--paper-2)}
+.adm-banner{background:var(--paper-2);border-bottom:1px solid var(--rule);padding:14px 0;font-size:.95em}
+.adm{display:grid;grid-template-columns:220px 300px minmax(0,1fr);min-height:640px;border:1px solid var(--rule);margin:24px 0 64px;background:var(--paper)}
+.adm>*{min-width:0}
+.adm-nav{border-inline-end:1px solid var(--rule);background:var(--paper-2);padding:12px 0}
+.adm-nav button{display:flex;justify-content:space-between;width:100%;text-align:start;padding:10px 16px;background:none;border:0;cursor:pointer;font-size:15px;border-inline-start:3px solid transparent;transition:background-color .15s}
+.adm-nav button:hover{background:rgba(127,127,127,.12)}
+.adm-nav button[aria-current="true"]{border-inline-start-color:var(--forest);font-weight:600;background:var(--paper)}
+:root[data-theme="dark"] .adm-nav button[aria-current="true"]{border-inline-start-color:var(--gold-lt)}
+.adm-list{border-inline-end:1px solid var(--rule)}
+.adm-list h2{font:600 15px var(--f-ui);padding:16px;border-bottom:1px solid var(--rule)}
+.adm-list button{display:block;width:100%;text-align:start;padding:14px 16px;background:none;border:0;border-bottom:1px solid var(--rule);cursor:pointer;transition:background-color .15s}
+.adm-list button:hover{background:var(--paper-2)}
+.adm-list button[aria-current="true"]{background:var(--paper-2);box-shadow:inset 3px 0 0 var(--forest)}
+.adm-list .t{display:block;font-weight:500;line-height:1.4}
+.adm-list .s{font-size:12px;color:var(--muted);display:flex;gap:8px;margin-top:4px;align-items:center}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}
+.dot.pub{background:var(--forest)}.dot.draft{background:var(--gold)}
+.adm-ed{padding:0 0 32px}
+.adm-top{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.adm-top .l{display:flex;gap:8px;align-items:center}
+.adm-body{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:32px;padding:20px}
+.adm-fields{display:grid;gap:18px;align-content:start}
+.adm-fields label{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+.adm-fields input[type=text],.adm-fields input[type=date],.adm-fields select,.adm-fields textarea{width:100%;min-height:40px;padding:8px 10px;background:var(--paper);border:1px solid var(--muted);border-radius:2px}
+.adm-fields textarea{min-height:84px}
+.adm-fields .rtl{direction:rtl;font-family:var(--f-ar-ui)}
+.fh{font-size:12px;color:var(--muted);margin-top:4px}
+.imgph{border:1px dashed var(--muted);padding:18px;text-align:center;color:var(--muted);font-size:13px}
+.rich{border:1px solid var(--muted)}
+.rich .tb{display:flex;gap:4px;padding:6px;border-bottom:1px solid var(--rule);font-size:12px;color:var(--muted)}
+.rich .tb span{padding:2px 8px;border:1px solid var(--rule)}
+.rich .bd{padding:12px;min-height:90px;color:var(--muted);font-size:14px}
+.chk{display:flex;gap:8px;align-items:center;font-weight:400!important}
+.chk input{width:18px;height:18px}
+.tgl{display:flex;align-items:center;gap:10px}
+.tgl input{width:18px;height:18px}
+.pv{border:1px solid var(--rule);padding:16px;background:var(--paper-2);align-self:start;position:sticky;top:90px}
+.pv h3{font-size:13px;font-family:var(--f-ui);font-weight:600;margin-bottom:10px;color:var(--muted)}
+.pv .card{background:var(--paper);border:1px solid var(--rule);padding:14px}
+.pv .card .ti{font-family:var(--display);font-size:20px;line-height:1.4}
+.toast{position:fixed;inset-inline:16px;bottom:16px;max-width:460px;margin-inline:auto;background:var(--night);color:#EDE7D8;padding:14px 18px;border-radius:2px;display:none;z-index:60;font-size:14px;border:1px solid var(--gold-lt)}
+.toast.show{display:block;animation:vin .2s var(--ease)}
+@media (max-width:1000px){.adm{grid-template-columns:1fr}.adm-nav{display:flex;overflow-x:auto;border-inline-end:0;border-bottom:1px solid var(--rule);padding:0}.adm-nav button{width:auto;white-space:nowrap;border-inline-start:0;border-bottom:3px solid transparent}.adm-nav button[aria-current="true"]{border-bottom-color:var(--forest)}.adm-list{border-inline-end:0;border-bottom:1px solid var(--rule)}.adm-body{grid-template-columns:1fr}.pv{position:static}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main"><span class="en">Skip to content</span><span class="ar" lang="ar">انتقل إلى المحتوى</span></a>
+<div class="strip" role="note">
+  <span class="en">Design prototype — sample content. Nothing is saved, sent or published.</span>
+  <span class="ar" lang="ar">نموذج تصميمي — محتوى تجريبي. لا يُحفظ شيء ولا يُرسل ولا يُنشر.</span>
+</div>
+
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="#/home" aria-label="Taher Fawaz">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="1" opacity=".45"/><circle cx="24.2" cy="5.8" r="2.4" fill="var(--gold)"/></svg>
+      <span class="en">Taher Fawaz</span><span class="ar" lang="ar">طاهر فواز</span>
+    </a>
+    <nav class="main" aria-label="Primary">
+      <ul>
+        <li><a href="#/projects" data-nav="projects"><span class="en">Projects</span><span class="ar" lang="ar">المشاريع</span></a></li>
+        <li><a href="#/experience" data-nav="experience"><span class="en">Experience</span><span class="ar" lang="ar">الخبرات</span></a></li>
+        <li><a href="#/blog" data-nav="blog"><span class="en">Blog</span><span class="ar" lang="ar">المدوّنة</span></a></li>
+        <li><a href="#/videos" data-nav="videos"><span class="en">Videos</span><span class="ar" lang="ar">الفيديو</span></a></li>
+        <li><a href="#/about" data-nav="about"><span class="en">About</span><span class="ar" lang="ar">عنّي</span></a></li>
+        <li><a href="#/contact" data-nav="contact"><span class="en">Contact</span><span class="ar" lang="ar">تواصل</span></a></li>
+      </ul>
+    </nav>
+    <div class="tools">
+      <button class="tbtn" id="langBtn" type="button"><svg class="i"><use href="#i-globe"/></svg><span class="en" lang="ar">العربية</span><span class="ar">English</span></button>
+      <button class="tbtn" id="themeBtn" type="button" aria-pressed="false"><svg class="i"><use href="#i-moon"/></svg><span class="sr" id="themeLbl">Dark theme</span></button>
+      <button class="tbtn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mnav"><svg class="i"><use href="#i-menu"/></svg><span class="sr" id="menuLbl">Menu</span></button>
+    </div>
+  </div>
+  <div class="mnav" id="mnav"><div class="wrap"><ul>
+    <li><a href="#/home" data-nav="home"><span class="en">Home</span><span class="ar" lang="ar">الرئيسية</span></a></li>
+    <li><a href="#/projects" data-nav="projects"><span class="en">Projects</span><span class="ar" lang="ar">المشاريع</span></a></li>
+    <li><a href="#/experience" data-nav="experience"><span class="en">Experience</span><span class="ar" lang="ar">الخبرات</span></a></li>
+    <li><a href="#/blog" data-nav="blog"><span class="en">Blog</span><span class="ar" lang="ar">المدوّنة</span></a></li>
+    <li><a href="#/videos" data-nav="videos"><span class="en">Videos</span><span class="ar" lang="ar">الفيديو</span></a></li>
+    <li><a href="#/about" data-nav="about"><span class="en">About</span><span class="ar" lang="ar">عنّي</span></a></li>
+    <li><a href="#/contact" data-nav="contact"><span class="en">Contact</span><span class="ar" lang="ar">تواصل</span></a></li>
+    <li><a href="#/admin" data-nav="admin">Admin (prototype)</a></li>
+  </ul></div></div>
+</header>
+
+<main id="main">
+
+<!-- ═════════════ HOME ═════════════ -->
+<div class="view" id="v-home" data-title-en="Taher Fawaz — Senior Mobile Application Developer" data-title-ar="طاهر فواز — مطوّر تطبيقات موبايل أول">
+  <section class="field hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <h1 class="reveal tf" tabindex="-1"><span class="en">I build mobile apps at scale, then explain how they work.</span><span class="ar" lang="ar">أبني تطبيقات موبايل واسعة النطاق، ثم أشرح كيف تعمل.</span></h1>
+          <p class="lede reveal"><span class="en"><b>Taher Fawaz</b> — Senior Mobile Application Developer. Seven years of Flutter and native Android, from telecom and government services to education and cybersecurity.</span><span class="ar" lang="ar"><b>طاهر فواز</b> — مطوّر تطبيقات موبايل أول. سبع سنوات مع Flutter وأندرويد الأصلي، من الاتصالات والخدمات الحكومية إلى التعليم والأمن السيبراني.</span></p>
+          <div class="cta reveal">
+            <a class="btn on-field" href="#/projects"><span class="en">See selected work</span><span class="ar" lang="ar">شاهد أعمالي المختارة</span><svg class="i flip"><use href="#i-arrow"/></svg></a>
+            <a class="tlink" href="#/blog"><span class="en">Read and watch</span><span class="ar" lang="ar">اقرأ وشاهد</span></a>
+          </div>
+          <p class="now reveal"><span class="chip cv"><span class="en">From CV</span><span class="ar" lang="ar">من السيرة الذاتية</span></span>
+            <span class="en">Now: Senior Flutter Developer at e&amp; Egypt (Etisalat), since July 2025.</span><span class="ar" lang="ar">حاليًا: مطوّر Flutter أول في e&amp; مصر (اتصالات)، منذ يوليو 2025.</span></p>
+        </div>
+        <svg class="orbit" id="orbit" viewBox="0 0 560 560" role="group" aria-label="The three roles: Engineer, Educator, Builder" data-active="">
+          <circle class="ring r-engineer" cx="280" cy="280" r="100"/>
+          <circle class="ring r-educator" cx="280" cy="280" r="170"/>
+          <circle class="ring r-builder" cx="280" cy="280" r="240"/>
+          <circle class="core" cx="280" cy="280" r="5"/>
+          <g class="body" id="b-engineer"><a href="#/projects" data-role="engineer"><circle cx="193" cy="230" r="9"/><text class="en" x="193" y="204">Engineer</text><text class="ar" lang="ar" x="193" y="204">المهندس</text></a></g>
+          <g class="body" id="b-educator"><a href="#/blog" data-role="educator"><circle cx="440" cy="222" r="9"/><text class="en" x="440" y="196">Educator</text><text class="ar" lang="ar" x="440" y="196">المعلّم</text></a></g>
+          <g class="body" id="b-builder"><a href="#/projects" data-role="builder"><circle cx="400" cy="488" r="9"/><text class="en" x="400" y="462">Builder</text><text class="ar" lang="ar" x="400" y="462">الصانع</text></a></g>
+        </svg>
+      </div>
+      <div class="roles">
+        <a class="role" href="#/projects" data-role="engineer"><h3><span class="en">Engineer</span><span class="ar" lang="ar">المهندس</span><svg class="i flip"><use href="#i-arrow"/></svg></h3><p><span class="en">Flutter and native Android, built on clean architecture and measured performance.</span><span class="ar" lang="ar">Flutter وأندرويد الأصلي، مبنيّان على معمارية نظيفة وأداء مقيس.</span></p></a>
+        <a class="role" href="#/blog" data-role="educator"><h3><span class="en">Educator</span><span class="ar" lang="ar">المعلّم</span><svg class="i flip"><use href="#i-arrow"/></svg></h3><p><span class="en">Articles, videos and Shorts in Arabic about mobile engineering and the trade-offs behind it.</span><span class="ar" lang="ar">مقالات وفيديوهات وشورتس بالعربية عن هندسة الموبايل والمفاضلات وراءها.</span></p></a>
+        <a class="role" href="#/projects" data-role="builder"><h3><span class="en">Builder</span><span class="ar" lang="ar">الصانع</span><svg class="i flip"><use href="#i-arrow"/></svg></h3><p><span class="en">Ideas and experiments, shared as they become working products. <span class="chip ph" style="color:var(--gold-lt)">Coming soon</span></span><span class="ar" lang="ar">أفكار وتجارب تتحول إلى منتجات تعمل، أشاركها أولًا بأول. <span class="chip ph" style="color:var(--gold-lt)">قريبًا</span></span></p></a>
+      </div>
+      <div style="height:clamp(40px,6vw,72px)"></div>
+    </div>
+  </section>
+
+  <section class="blk" style="border-top:0">
+    <div class="wrap">
+      <div class="sec-head"><h2 class="sec"><span class="en">Selected projects</span><span class="ar" lang="ar">مشاريع مختارة</span></h2><a class="tlink" href="#/projects"><span class="en">All projects</span><span class="ar" lang="ar">كل المشاريع</span><svg class="i flip"><use href="#i-arrow"/></svg></a></div>
+      <div class="proj-grid">
+        <a class="proj" href="#/projects/sanad">
+          <div class="plate"><svg viewBox="0 0 700 440" role="img" aria-label="Placeholder artwork"><rect width="700" height="440" fill="none"/><g fill="none" stroke="var(--ink)" stroke-width="1.5" opacity=".75"><rect x="150" y="50" width="170" height="320" rx="18"/><rect x="380" y="80" width="170" height="320" rx="18"/></g><g fill="var(--rule)"><rect x="170" y="90" width="80" height="10"/><rect x="170" y="112" width="130" height="8"/><rect x="170" y="150" width="130" height="90"/><rect x="170" y="256" width="130" height="8"/><rect x="170" y="274" width="90" height="8"/><rect x="400" y="120" width="130" height="10"/><rect x="400" y="146" width="130" height="64"/><rect x="400" y="226" width="130" height="64"/></g></svg>
+            <div class="lbl"><span class="en">Placeholder — real screenshots to be supplied</span><span class="ar" lang="ar">مكان مؤقت — ستُضاف لقطات الشاشة الحقيقية</span></div></div>
+          <h3>Sanad</h3>
+          <p class="where"><span class="en">Government · Jordan</span><span class="ar" lang="ar">حكومة · الأردن</span></p>
+          <p class="sum"><span class="en">The official government services gateway in Jordan.</span><span class="ar" lang="ar">البوابة الرسمية للخدمات الحكومية في الأردن.</span></p>
+          <div class="tags"><span>Flutter</span><span>Clean Architecture</span><span>MVVM</span><span>DIO</span></div>
+          <span class="go"><span class="en">View project</span><span class="ar" lang="ar">عرض المشروع</span><svg class="i flip"><use href="#i-arrow"/></svg></span>
+        </a>
+        <a class="proj second" href="#/projects/my-etisalat">
+          <div class="plate"><svg viewBox="0 0 420 520" role="img" aria-label="Placeholder artwork"><g fill="none" stroke="var(--ink)" stroke-width="1.5" opacity=".75"><rect x="110" y="50" width="200" height="400" rx="20"/></g><g fill="var(--rule)"><rect x="132" y="94" width="100" height="10"/><rect x="132" y="120" width="156" height="76"/><rect x="132" y="212" width="70" height="60"/><rect x="218" y="212" width="70" height="60"/><rect x="132" y="288" width="156" height="8"/><rect x="132" y="306" width="110" height="8"/></g></svg>
+            <div class="lbl"><span class="en">Placeholder</span><span class="ar" lang="ar">مكان مؤقت</span></div></div>
+          <h3>My Etisalat / My e&amp;</h3>
+          <p class="where"><span class="en">Telecom · Egypt</span><span class="ar" lang="ar">اتصالات · مصر</span></p>
+          <p class="sum"><span class="en">A large-scale self-care app for millions of users.</span><span class="ar" lang="ar">تطبيق خدمة ذاتية واسع النطاق يخدم ملايين المستخدمين.</span></p>
+          <div class="tags"><span>Flutter</span><span>Bloc</span><span>Clean Architecture</span></div>
+          <span class="go"><span class="en">View project</span><span class="ar" lang="ar">عرض المشروع</span><svg class="i flip"><use href="#i-arrow"/></svg></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="blk">
+    <div class="wrap">
+      <div class="sec-head"><h2 class="sec"><span class="en">Where I have worked</span><span class="ar" lang="ar">أين عملت</span></h2><a class="tlink" href="#/experience"><span class="en">Full experience</span><span class="ar" lang="ar">كل الخبرات</span><svg class="i flip"><use href="#i-arrow"/></svg></a></div>
+      <ul class="ledger" id="homeLedger"></ul>
+    </div>
+  </section>
+
+  <section class="blk">
+    <div class="wrap">
+      <div class="sec-head"><h2 class="sec"><span class="en">From the blog</span><span class="ar" lang="ar">من المدوّنة</span></h2><a class="tlink" href="#/blog"><span class="en">All articles</span><span class="ar" lang="ar">كل المقالات</span><svg class="i flip"><use href="#i-arrow"/></svg></a></div>
+      <div class="write-grid">
+        <ul class="alist" id="homeArticles"></ul>
+        <div>
+          <h3 style="font-size:22px;margin-bottom:12px"><span class="en">Three things I write about</span><span class="ar" lang="ar">ثلاثة مواضيع أكتب عنها</span></h3>
+          <ul class="pillars">
+            <li><h3><span class="en">Mobile Engineering</span><span class="ar" lang="ar">هندسة الموبايل</span></h3><p><span class="en">Flutter and SwiftUI.</span><span class="ar" lang="ar">Flutter وSwiftUI.</span></p></li>
+            <li><h3><span class="en">Software Architecture</span><span class="ar" lang="ar">معمارية البرمجيات</span></h3><p><span class="en">Clean Architecture, state management, API integration, performance.</span><span class="ar" lang="ar">المعمارية النظيفة، إدارة الحالة، ربط الـ API، والأداء.</span></p></li>
+            <li><h3><span class="en">Real-World Engineering</span><span class="ar" lang="ar">هندسة من الواقع</span></h3><p><span class="en">Practical problems, trade-offs, lessons and implementation decisions.</span><span class="ar" lang="ar">مشكلات عملية، مفاضلات، دروس مستفادة وقرارات تنفيذ.</span></p></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="blk">
+    <div class="wrap">
+      <div class="sec-head"><h2 class="sec"><span class="en">Watch</span><span class="ar" lang="ar">شاهد</span></h2><a class="tlink" href="#/videos"><span class="en">All videos and Shorts</span><span class="ar" lang="ar">كل الفيديوهات والشورتس</span><svg class="i flip"><use href="#i-arrow"/></svg></a></div>
+      <div class="vrow" id="homeVideos" tabindex="0" role="region" aria-label="Sample videos"></div>
+    </div>
+  </section>
+
+  <section class="night close">
+    <div class="wrap">
+      <h2><span class="en">Hiring, building something, or want to collaborate?</span><span class="ar" lang="ar">تبحث عن مطوّر، أو تبني شيئًا، أو ترغب بالتعاون؟</span></h2>
+      <div class="row">
+        <a class="btn" href="#/contact"><span class="en">Get in touch</span><span class="ar" lang="ar">تواصل معي</span><svg class="i flip"><use href="#i-arrow"/></svg></a>
+        <span class="ph-link"><span class="en">LinkedIn · GitHub · YouTube — links to be added</span><span class="ar" lang="ar">لينكدإن · غيت هب · يوتيوب — الروابط ستُضاف لاحقًا</span></span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═════════════ ABOUT ═════════════ -->
+<div class="view" id="v-about" data-title-en="About — Taher Fawaz" data-title-ar="عنّي — طاهر فواز">
+  <div class="wrap">
+    <div class="page-head"><h1 tabindex="-1"><span class="en">An engineer who also explains.</span><span class="ar" lang="ar">مهندس يشرح أيضًا.</span></h1>
+      <p class="lead"><span class="chip draft"><span class="en">Draft copy</span><span class="ar" lang="ar">نص مسودة</span></span> <span class="en">The story below is a structure to fill in, not final wording. Facts are limited to the CV.</span><span class="ar" lang="ar">القصة أدناه هيكل يُملأ لاحقًا وليست الصياغة النهائية. الوقائع مقتصرة على السيرة الذاتية.</span></p></div>
+    <div class="about-grid">
+      <div class="prose">
+        <p><span class="en">I am a Senior Mobile Application Developer specialising in Flutter and native Android (Kotlin and Java), with seven years of experience delivering mobile apps across telecommunications, government services, education, cybersecurity and business tools. I started in web development before moving to mobile.</span><span class="ar" lang="ar">أنا مطوّر تطبيقات موبايل أول متخصص في Flutter وأندرويد الأصلي (Kotlin وJava)، بخبرة سبع سنوات في تسليم تطبيقات في مجالات الاتصالات والخدمات الحكومية والتعليم والأمن السيبراني وأدوات الأعمال. بدأت في تطوير الويب قبل أن أنتقل إلى الموبايل.</span></p>
+        <p class="muted"><span class="chip ph"><span class="en">Placeholder</span><span class="ar" lang="ar">مكان مؤقت</span></span> <span class="en">Personal story: why mobile, why teaching, what building in public means to you. To be written by Taher.</span><span class="ar" lang="ar">القصة الشخصية: لماذا الموبايل، ولماذا التعليم، وماذا يعني لك البناء أمام الناس. يكتبها طاهر لاحقًا.</span></p>
+        <h2><span class="en">How I work</span><span class="ar" lang="ar">كيف أعمل</span></h2>
+        <ol class="princ">
+          <li><b><span class="en">Principle one</span><span class="ar" lang="ar">المبدأ الأول</span></b><span class="muted"><span class="chip ph"><span class="en">Placeholder</span><span class="ar" lang="ar">مكان مؤقت</span></span> <span class="en">An engineering belief in one sentence.</span><span class="ar" lang="ar">قناعة هندسية في جملة واحدة.</span></span></li>
+          <li><b><span class="en">Principle two</span><span class="ar" lang="ar">المبدأ الثاني</span></b><span class="muted"><span class="en">Replace with a real principle.</span><span class="ar" lang="ar">يُستبدل بمبدأ حقيقي.</span></span></li>
+          <li><b><span class="en">Principle three</span><span class="ar" lang="ar">المبدأ الثالث</span></b><span class="muted"><span class="en">Replace with a real principle.</span><span class="ar" lang="ar">يُستبدل بمبدأ حقيقي.</span></span></li>
+        </ol>
+      </div>
+      <aside>
+        <dl class="dl">
+          <div><dt><span class="en">Focus</span><span class="ar" lang="ar">مجالات التركيز</span></dt><dd><span class="en">Flutter · Native Android · Architecture · API integration and offline-first · Firebase</span><span class="ar" lang="ar">Flutter · أندرويد الأصلي · المعمارية · ربط الـ API وتجربة offline-first · Firebase</span></dd></div>
+          <div><dt><span class="en">Architecture</span><span class="ar" lang="ar">المعمارية</span></dt><dd><span class="en">Clean Architecture, MVVM, layered architecture; Bloc, Provider, Cubit, GetX, Riverpod</span><span class="ar" lang="ar">المعمارية النظيفة، وMVVM، والمعمارية الطبقية؛ وBloc وProvider وCubit وGetX وRiverpod</span></dd></div>
+          <div><dt><span class="en">Education</span><span class="ar" lang="ar">التعليم</span></dt><dd><span class="en">B.Eng., 2018 — Higher Institute for Engineering &amp; Technology, 6th October City</span><span class="ar" lang="ar">بكالوريوس هندسة، 2018 — المعهد العالي للهندسة والتكنولوجيا، مدينة 6 أكتوبر</span></dd></div>
+          <div><dt><span class="en">Exploring now</span><span class="ar" lang="ar">أستكشف حاليًا</span></dt><dd><span class="en">SwiftUI, as a topic I am learning and teaching — not a claim of professional experience.</span><span class="ar" lang="ar">SwiftUI، كموضوع أتعلّمه وأشرحه — وليس ادعاءً بخبرة مهنية.</span></dd></div>
+          <div><dt><span class="en">Based in</span><span class="ar" lang="ar">أقيم في</span></dt><dd><span class="en">Cairo, Egypt</span><span class="ar" lang="ar">القاهرة، مصر</span></dd></div>
+        </dl>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════ EXPERIENCE ═════════════ -->
+<div class="view" id="v-experience" data-title-en="Work Experience — Taher Fawaz" data-title-ar="الخبرات العملية — طاهر فواز">
+  <div class="wrap">
+    <div class="page-head"><h1 tabindex="-1"><span class="en">Work experience</span><span class="ar" lang="ar">الخبرات العملية</span></h1>
+      <p class="lead"><span class="en">Most recent first. Entries marked <span class="chip confirm">Confirm</span> were read from the CV’s two-column layout and need a quick check of dates and roles.</span><span class="ar" lang="ar">الأحدث أولًا. الخانات الموسومة بعلامة <span class="chip confirm">للتأكيد</span> قُرئت من تخطيط السيرة الذاتية ذي العمودين وتحتاج مراجعة سريعة للتواريخ والمسميات.</span></p></div>
+    <ul class="ledger" id="expLedger"></ul>
+    <section class="blk" style="margin-top:56px">
+      <h2 class="sec" style="margin-bottom:24px"><span class="en">Skills, from the CV</span><span class="ar" lang="ar">المهارات، من السيرة الذاتية</span></h2>
+      <dl class="dl" style="max-width:860px">
+        <div><dt>Flutter</dt><dd><span class="en">Widgets, animations, state management, navigation, performance optimisation.</span><span class="ar" lang="ar">الـ Widgets والحركة وإدارة الحالة والتنقل وتحسين الأداء.</span></dd></div>
+        <div><dt><span class="en">Native</span><span class="ar" lang="ar">التطوير الأصلي</span></dt><dd><span class="en">Android (Kotlin/Java); platform-specific integrations for Android and iOS.</span><span class="ar" lang="ar">أندرويد (Kotlin/Java)؛ وتكاملات خاصة بالمنصة لأندرويد وiOS.</span></dd></div>
+        <div><dt><span class="en">Backend and APIs</span><span class="ar" lang="ar">الـ API</span></dt><dd><span class="en">REST APIs, JSON handling, error management, offline-first experiences (caching, retry logic).</span><span class="ar" lang="ar">REST وJSON ومعالجة الأخطاء وتجارب offline-first (التخزين المؤقت وإعادة المحاولة).</span></dd></div>
+        <div><dt>Firebase</dt><dd><span class="en">Authentication, Firestore/Realtime DB, FCM, Crashlytics, App Distribution.</span><span class="ar" lang="ar">المصادقة وFirestore/Realtime DB وFCM وCrashlytics وApp Distribution.</span></dd></div>
+      </dl>
+    </section>
+  </div>
+</div>
+
+<!-- ═════════════ PROJECTS ═════════════ -->
+<div class="view" id="v-projects" data-title-en="Projects — Taher Fawaz" data-title-ar="المشاريع — طاهر فواز">
+  <div class="wrap">
+    <div class="page-head"><h1 tabindex="-1"><span class="en">Projects</span><span class="ar" lang="ar">المشاريع</span></h1>
+      <p class="lead"><span class="en">Two flagship products first. Detailed contributions and screenshots will be added later.</span><span class="ar" lang="ar">منتجان رئيسيان أولًا. ستُضاف المساهمات التفصيلية ولقطات الشاشة لاحقًا.</span></p></div>
+    <div class="proj-grid" style="padding-bottom:56px">
+      <a class="proj" href="#/projects/sanad">
+        <div class="plate"><svg viewBox="0 0 700 440" role="img" aria-label="Placeholder artwork"><g fill="none" stroke="var(--ink)" stroke-width="1.5" opacity=".75"><rect x="150" y="50" width="170" height="320" rx="18"/><rect x="380" y="80" width="170" height="320" rx="18"/></g><g fill="var(--rule)"><rect x="170" y="90" width="80" height="10"/><rect x="170" y="150" width="130" height="90"/><rect x="400" y="120" width="130" height="64"/></g></svg><div class="lbl"><span class="en">Placeholder</span><span class="ar" lang="ar">مكان مؤقت</span></div></div>
+        <h3>Sanad</h3><p class="where"><span class="en">Government · Jordan</span><span class="ar" lang="ar">حكومة · الأردن</span></p>
+        <p class="sum"><span class="en">The official government services gateway in Jordan.</span><span class="ar" lang="ar">البوابة الرسمية للخدمات الحكومية في الأردن.</span></p>
+        <div class="tags"><span>Flutter</span><span>Clean Architecture</span><span>MVVM</span><span>DIO</span></div></a>
+      <a class="proj second" href="#/projects/my-etisalat">
+        <div class="plate"><svg viewBox="0 0 420 520" role="img" aria-label="Placeholder artwork"><g fill="none" stroke="var(--ink)" stroke-width="1.5" opacity=".75"><rect x="110" y="50" width="200" height="400" rx="20"/></g><g fill="var(--rule)"><rect x="132" y="94" width="100" height="10"/><rect x="132" y="120" width="156" height="76"/></g></svg><div class="lbl"><span class="en">Placeholder</span><span class="ar" lang="ar">مكان مؤقت</span></div></div>
+        <h3>My Etisalat / My e&amp;</h3><p class="where"><span class="en">Telecom · Egypt</span><span class="ar" lang="ar">اتصالات · مصر</span></p>
+        <p class="sum"><span class="en">A large-scale self-care app for millions of users.</span><span class="ar" lang="ar">تطبيق خدمة ذاتية واسع النطاق يخدم ملايين المستخدمين.</span></p>
+        <div class="tags"><span>Flutter</span><span>Bloc</span><span>Clean Architecture</span></div></a>
+    </div>
+    <section class="blk">
+      <h2 class="sec" style="margin-bottom:8px"><span class="en">Also in the CV</span><span class="ar" lang="ar">مشاريع أخرى في السيرة الذاتية</span></h2>
+      <p class="muted" style="margin-bottom:24px;max-width:62ch"><span class="chip draft"><span class="en">Draft</span><span class="ar" lang="ar">مسودة</span></span> <span class="en">Listed as the CV states them; to be curated before becoming project pages.</span><span class="ar" lang="ar">مذكورة كما وردت في السيرة الذاتية؛ تُنقَّح قبل أن تصبح صفحات مشاريع.</span></p>
+      <ul class="more-list" style="margin-bottom:64px">
+        <li><b>SafeToNet</b><span><span class="en">AI-powered parental control and child-protection keyboard app (cybersecurity, UK).</span><span class="ar" lang="ar">تطبيق لوحة مفاتيح للرقابة الأبوية وحماية الأطفال مدعوم بالذكاء الاصطناعي (أمن سيبراني، بريطانيا).</span></span><span class="chip cv"><span class="en">From CV</span><span class="ar" lang="ar">من السيرة</span></span></li>
+        <li><b>Hesabate</b><span><span class="en">Android app for managing business operations, linked to the Hesabate ERP (accounting, GCC).</span><span class="ar" lang="ar">تطبيق أندرويد لإدارة العمليات التجارية مرتبط بنظام Hesabate ERP (محاسبة، الخليج).</span></span><span class="chip cv"><span class="en">From CV</span><span class="ar" lang="ar">من السيرة</span></span></li>
+        <li><b>Ezeness</b><span><span class="en">Combines social media with e-commerce and earning tools (social commerce, global).</span><span class="ar" lang="ar">يجمع بين التواصل الاجتماعي والتجارة الإلكترونية وأدوات الربح (تجارة اجتماعية، عالمي).</span></span><span class="chip cv"><span class="en">From CV</span><span class="ar" lang="ar">من السيرة</span></span></li>
+        <li><b>Flairstech Suite</b><span><span class="en">Employee attendance and task-management app (productivity).</span><span class="ar" lang="ar">تطبيق حضور الموظفين وإدارة المهام (إنتاجية).</span></span><span class="chip cv"><span class="en">From CV</span><span class="ar" lang="ar">من السيرة</span></span></li>
+        <li><b>NTG Apps</b><span><span class="en">Multi-module mobile interface for enterprise web systems.</span><span class="ar" lang="ar">واجهة موبايل متعددة الوحدات لأنظمة ويب مؤسسية.</span></span><span class="chip cv"><span class="en">From CV</span><span class="ar" lang="ar">من السيرة</span></span></li>
+      </ul>
+    </section>
+  </div>
+</div>
+
+<!-- ═════════════ PROJECT DETAIL: SANAD ═════════════ -->
+<div class="view" id="v-sanad" data-title-en="Sanad — Project" data-title-ar="سند — مشروع">
+  <div class="wrap">
+    <div class="page-head" style="padding-bottom:0">
+      <a class="tlink" href="#/projects"><svg class="i flip" style="transform:scaleX(-1)"><use href="#i-arrow"/></svg><span class="en">All projects</span><span class="ar" lang="ar">كل المشاريع</span></a>
+      <h1 tabindex="-1" style="margin-top:24px">Sanad</h1>
+      <p class="lead"><span class="en">The official government services gateway in Jordan.</span><span class="ar" lang="ar">البوابة الرسمية للخدمات الحكومية في الأردن.</span></p>
+      <dl class="pd-meta">
+        <div><dt><span class="en">Domain</span><span class="ar" lang="ar">المجال</span></dt><dd><span class="en">Government · Jordan</span><span class="ar" lang="ar">حكومة · الأردن</span></dd></div>
+        <div><dt><span class="en">Role (CV)</span><span class="ar" lang="ar">الدور (حسب السيرة)</span></dt><dd><span class="en">Senior Flutter Developer</span><span class="ar" lang="ar">مطوّر Flutter أول</span></dd></div>
+        <div><dt><span class="en">Period</span><span class="ar" lang="ar">الفترة</span></dt><dd><span class="mono">Nov 2022 – Mar 2023</span> <span class="chip confirm"><span class="en">Confirm</span><span class="ar" lang="ar">للتأكيد</span></span></dd></div>
+        <div><dt><span class="en">Stack</span><span class="ar" lang="ar">التقنيات</span></dt><dd class="mono" style="font-size:.9em">Flutter · DIO · Firebase</dd></div>
+      </dl>
+    </div>
+    <div class="shots" aria-label="Placeholder screens">
+      <div class="plate"><svg viewBox="0 0 300 520"><g fill="none" stroke="var(--ink)" stroke-width="1.5" opacity=".75"><rect x="60" y="40" width="180" height="400" rx="20"/></g><g fill="var(--rule)"><rect x="80" y="84" width="90" height="10"/><rect x="80" y="110" width="140" height="80"/></g></svg><div class="lbl"><span class="en">Placeholder screen</span><span class="ar" lang="ar">شاشة مؤقتة</span></div></div>
+      <div class="plate"><svg viewBox="0 0 300 520"><g fill="none" stroke="var(--ink)" stroke-width="1.5" opacity=".75"><rect x="60" y="40" width="180" height="400" rx="20"/></g><g fill="var(--rule)"><rect x="80" y="84" width="90" height="10"/><rect x="80" y="110" width="140" height="40"/><rect x="80" y="166" width="140" height="40"/></g></svg><div class="lbl"><span class="en">Placeholder screen</span><span class="ar" lang="ar">شاشة مؤقتة</span></div></div>
+      <div class="plate"><svg viewBox="0 0 300 520"><g fill="none" stroke="var(--ink)" stroke-width="1.5" opacity=".75"><rect x="60" y="40" width="180" height="400" rx="20"/></g><g fill="var(--rule)"><rect x="80" y="84" width="90" height="10"/><rect x="80" y="110" width="60" height="60"/><rect x="154" y="110" width="66" height="60"/></g></svg><div class="lbl"><span class="en">Placeholder screen</span><span class="ar" lang="ar">شاشة مؤقتة</span></div></div>
+    </div>
+    <div class="pd-cols">
+      <div>
+        <h2 style="font-size:28px;margin-bottom:12px"><span class="en">Contributions, as listed in the CV</span><span class="ar" lang="ar">المساهمات كما وردت في السيرة</span></h2>
+        <ul class="plain">
+          <li><span class="en">Clean Architecture and MVVM.</span><span class="ar" lang="ar">المعمارية النظيفة وMVVM.</span></li>
+          <li><span class="en">API integration with DIO.</span><span class="ar" lang="ar">ربط الـ API باستخدام DIO.</span></li>
+          <li><span class="en">UI/UX optimisation and enhanced UI/UX flows.</span><span class="ar" lang="ar">تحسين واجهة وتجربة المستخدم وتدفقاتها.</span></li>
+          <li><span class="en">Secure modules and security enhancements, in line with government security standards.</span><span class="ar" lang="ar">وحدات آمنة وتحسينات أمنية بما يتوافق مع معايير الأمن الحكومية.</span></li>
+          <li><span class="en">Firebase for analytics, notifications and real-time updates.</span><span class="ar" lang="ar">استخدام Firebase للتحليلات والإشعارات والتحديثات الفورية.</span></li>
+        </ul>
+        <div class="todo"><span class="chip ph"><span class="en">Placeholder</span><span class="ar" lang="ar">مكان مؤقت</span></span> <span class="en">Case study (decisions, constraints, outcomes) will be added in the CMS later. Nothing here is invented in the meantime.</span><span class="ar" lang="ar">ستُضاف دراسة الحالة (القرارات والقيود والنتائج) من لوحة التحرير لاحقًا. لا يوجد هنا شيء مختلق في الوقت الحالي.</span></div>
+      </div>
+      <aside>
+        <h2 style="font-size:22px;margin-bottom:8px"><span class="en">Related</span><span class="ar" lang="ar">ذو صلة</span></h2>
+        <ul class="plain muted">
+          <li><a class="tlink" href="#/blog/split-large-flutter-app"><span class="en">Sample article: splitting a large Flutter app</span><span class="ar" lang="ar">مقال تجريبي: تقسيم تطبيق Flutter كبير</span></a></li>
+          <li><a class="tlink" href="#/videos"><span class="en">Sample video: Clean Architecture in Flutter</span><span class="ar" lang="ar">فيديو تجريبي: Clean Architecture في Flutter</span></a></li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════ PROJECT DETAIL: MY ETISALAT ═════════════ -->
+<div class="view" id="v-etisalat" data-title-en="My Etisalat / My e& — Project" data-title-ar="My Etisalat / My e& — مشروع">
+  <div class="wrap">
+    <div class="page-head" style="padding-bottom:0">
+      <a class="tlink" href="#/projects"><svg class="i flip" style="transform:scaleX(-1)"><use href="#i-arrow"/></svg><span class="en">All projects</span><span class="ar" lang="ar">كل المشاريع</span></a>
+      <h1 tabindex="-1" style="margin-top:24px">My Etisalat / My e&amp;</h1>
+      <p class="lead"><span class="en">A large-scale self-care app for millions of users.</span><span class="ar" lang="ar">تطبيق خدمة ذاتية واسع النطاق يخدم ملايين المستخدمين.</span></p>
+      <dl class="pd-meta">
+        <div><dt><span class="en">Domain</span><span class="ar" lang="ar">المجال</span></dt><dd><span class="en">Telecom · Egypt</span><span class="ar" lang="ar">اتصالات · مصر</span></dd></div>
+        <div><dt><span class="en">Role (CV)</span><span class="ar" lang="ar">الدور (حسب السيرة)</span></dt><dd><span class="en">Senior Flutter Developer</span><span class="ar" lang="ar">مطوّر Flutter أول</span></dd></div>
+        <div><dt><span class="en">Period</span><span class="ar" lang="ar">الفترة</span></dt><dd><span class="mono">Jul 2025 – Now</span></dd></div>
+        <div><dt><span class="en">Stack</span><span class="ar" lang="ar">التقنيات</span></dt><dd class="mono" style="font-size:.9em">Flutter · Bloc · DIO</dd></div>
+      </dl>
+    </div>
+    <div class="shots" aria-label="Placeholder screens">
+      <div class="plate"><svg viewBox="0 0 300 520"><g fill="none" stroke="var(--ink)" stroke-width="1.5" opacity=".75"><rect x="60" y="40" width="180" height="400" rx="20"/></g><g fill="var(--rule)"><rect x="80" y="84" width="90" height="10"/><rect x="80" y="110" width="140" height="80"/></g></svg><div class="lbl"><span class="en">Placeholder screen</span><span class="ar" lang="ar">شاشة مؤقتة</span></div></div>
+      <div class="plate"><svg viewBox="0 0 300 520"><g fill="none" stroke="var(--ink)" stroke-width="1.5" opacity=".75"><rect x="60" y="40" width="180" height="400" rx="20"/></g><g fill="var(--rule)"><rect x="80" y="84" width="60" height="60"/><rect x="154" y="84" width="66" height="60"/></g></svg><div class="lbl"><span class="en">Placeholder screen</span><span class="ar" lang="ar">شاشة مؤقتة</span></div></div>
+      <div class="plate"><svg viewBox="0 0 300 520"><g fill="none" stroke="var(--ink)" stroke-width="1.5" opacity=".75"><rect x="60" y="40" width="180" height="400" rx="20"/></g><g fill="var(--rule)"><rect x="80" y="84" width="140" height="30"/><rect x="80" y="130" width="140" height="30"/></g></svg><div class="lbl"><span class="en">Placeholder screen</span><span class="ar" lang="ar">شاشة مؤقتة</span></div></div>
+    </div>
+    <div class="pd-cols">
+      <div>
+        <h2 style="font-size:28px;margin-bottom:12px"><span class="en">What the CV says</span><span class="ar" lang="ar">ما تقوله السيرة الذاتية</span></h2>
+        <ul class="plain">
+          <li><span class="en">One of the largest telecom self-care apps in Egypt, with millions of active users.</span><span class="ar" lang="ar">أحد أكبر تطبيقات الخدمة الذاتية لشركات الاتصالات في مصر، بملايين المستخدمين النشطين.</span></li>
+          <li><span class="en">Features include balance tracking, bundles, online payments, Etisalat Cash and digital services.</span><span class="ar" lang="ar">من ميزاته متابعة الرصيد والباقات والدفع الإلكتروني وEtisalat Cash والخدمات الرقمية.</span></li>
+          <li><span class="en">Clean, modular code with Flutter, Clean Architecture and Bloc across a large codebase; also MVVM, local caching and DIO.</span><span class="ar" lang="ar">كود نظيف وموزّع على وحدات باستخدام Flutter والمعمارية النظيفة وBloc في قاعدة كود كبيرة؛ إضافة إلى MVVM والتخزين المحلي وDIO.</span></li>
+          <li><span class="en">Secure payment integrations, including Etisalat Cash, with reliable API communication.</span><span class="ar" lang="ar">تكاملات دفع آمنة، منها Etisalat Cash، مع اتصال موثوق بالـ API.</span></li>
+        </ul>
+        <div class="todo"><span class="chip ph"><span class="en">Placeholder</span><span class="ar" lang="ar">مكان مؤقت</span></span> <span class="en">Case study and approved screenshots/logo to be added. No user counts beyond what the CV states.</span><span class="ar" lang="ar">دراسة الحالة ولقطات الشاشة/الشعار المعتمدة ستُضاف لاحقًا. لا أرقام مستخدمين سوى ما ورد في السيرة.</span></div>
+      </div>
+      <aside>
+        <h2 style="font-size:22px;margin-bottom:8px"><span class="en">Related</span><span class="ar" lang="ar">ذو صلة</span></h2>
+        <ul class="plain muted">
+          <li><a class="tlink" href="#/blog/bloc-or-riverpod"><span class="en">Sample article: Bloc or Riverpod?</span><span class="ar" lang="ar">مقال تجريبي: Bloc أم Riverpod؟</span></a></li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════ BLOG ═════════════ -->
+<div class="view" id="v-blog" data-title-en="Blog — Taher Fawaz" data-title-ar="المدوّنة — طاهر فواز">
+  <div class="wrap">
+    <div class="page-head"><h1 tabindex="-1"><span class="en">Blog</span><span class="ar" lang="ar">المدوّنة</span></h1>
+      <p class="lead"><span class="en">Articles are written in Arabic first. An English version exists only where marked.</span><span class="ar" lang="ar">المقالات تُكتب بالعربية أولًا. تتوفر نسخة إنجليزية فقط حيث يُشار إلى ذلك.</span></p></div>
+    <div class="filters" role="group" aria-label="Categories" id="blogFilters"></div>
+    <ul class="alist" id="blogList" style="margin-bottom:72px"></ul>
+    <p class="empty" id="blogEmpty" hidden><span class="en">No articles in this category yet.</span><span class="ar" lang="ar">لا توجد مقالات في هذا التصنيف بعد.</span></p>
+  </div>
+</div>
+
+<!-- ═════════════ ARTICLE DETAIL ═════════════ -->
+<div class="view" id="v-article" data-title-en="Article — Taher Fawaz" data-title-ar="مقال — طاهر فواز">
+  <div class="wrap">
+    <div class="art-head">
+      <a class="tlink" href="#/blog"><svg class="i flip" style="transform:scaleX(-1)"><use href="#i-arrow"/></svg><span class="en">All articles</span><span class="ar" lang="ar">كل المقالات</span></a>
+      <h1 id="artTitle" tabindex="-1" style="margin-top:24px"></h1>
+      <div class="art-meta">
+        <span id="artCat"></span><span class="mono" id="artDate"></span><span id="artMin"></span><span class="chip draft"><span class="en">Sample article</span><span class="ar" lang="ar">مقال تجريبي</span></span>
+      </div>
+      <div class="art-meta" style="margin-top:16px">
+        <div class="seg" role="group" aria-label="Article language"><button type="button" id="alAr" aria-pressed="true" lang="ar">العربية</button><button type="button" id="alEn" aria-pressed="false">English</button></div>
+        <span id="artLangNote" class="note"></span>
+      </div>
+    </div>
+    <article class="art-body" id="artBody"></article>
+    <div class="rel">
+      <a href="#/projects/sanad"><span class="k"><span class="en">Related project</span><span class="ar" lang="ar">مشروع ذو صلة</span></span><br><span class="v">Sanad</span></a>
+      <a href="#/videos"><span class="k"><span class="en">Related video</span><span class="ar" lang="ar">فيديو ذو صلة</span></span><br><span class="v"><span class="en">Clean Architecture in Flutter</span><span class="ar" lang="ar">Clean Architecture في Flutter</span></span></a>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════ VIDEOS ═════════════ -->
+<div class="view" id="v-videos" data-title-en="Videos — Taher Fawaz" data-title-ar="الفيديو — طاهر فواز">
+  <div class="wrap">
+    <div class="page-head"><h1 tabindex="-1"><span class="en">Videos and Shorts</span><span class="ar" lang="ar">الفيديوهات والشورتس</span></h1>
+      <p class="lead"><span class="en">Hosted on YouTube and embedded from the original URL — never duplicated on this site. Sample entries below.</span><span class="ar" lang="ar">مستضافة على يوتيوب وتُضمَّن من الرابط الأصلي — دون تكرارها على هذا الموقع. أدناه عناصر تجريبية.</span></p></div>
+    <div class="filters" role="group" aria-label="Format" id="vidFilters"></div>
+    <div class="vgrid" id="vidGrid" style="margin-bottom:72px"></div>
+  </div>
+</div>
+
+<!-- ═════════════ CONTACT ═════════════ -->
+<div class="view" id="v-contact" data-title-en="Contact — Taher Fawaz" data-title-ar="تواصل — طاهر فواز">
+  <div class="wrap">
+    <div class="page-head"><h1 tabindex="-1"><span class="en">Let’s talk.</span><span class="ar" lang="ar">لنتحدث.</span></h1>
+      <p class="lead"><span class="en">For roles, projects and collaboration. I read every message.</span><span class="ar" lang="ar">للفرص الوظيفية والمشاريع والتعاون. أقرأ كل رسالة.</span> <span class="chip ph"><span class="en">Reply time: to confirm</span><span class="ar" lang="ar">مدة الرد: للتأكيد</span></span></p></div>
+    <div class="contact-grid">
+      <div>
+        <p class="muted"><span class="en">Prefer a profile? These links are placeholders until the real ones are supplied.</span><span class="ar" lang="ar">تفضّل الملفات الشخصية؟ هذه الروابط مؤقتة إلى أن تُزوَّد الروابط الحقيقية.</span></p>
+        <ul class="soc">
+          <li><span>LinkedIn</span><span class="ph-link mono">linkedin.com/in/[to-be-added]</span></li>
+          <li><span>GitHub</span><span class="ph-link mono">github.com/[to-be-added]</span></li>
+          <li><span>YouTube</span><span class="ph-link mono">youtube.com/@[to-be-added]</span></li>
+          <li><span class="en">Email</span><span class="ar" lang="ar">البريد</span><span class="ph-link mono">hello@[your-domain]</span></li>
+        </ul>
+        <p class="note" style="margin-top:20px"><span class="en">Cairo, Egypt. No phone number or address is published.</span><span class="ar" lang="ar">القاهرة، مصر. لا يُنشر رقم هاتف أو عنوان.</span></p>
+      </div>
+      <form class="cf" id="cform" novalidate aria-describedby="cstatus">
+        <div class="fld" data-f="name"><label for="cName"><span class="en">Name</span><span class="ar" lang="ar">الاسم</span></label><input id="cName" name="name" autocomplete="name" aria-describedby="eName"><p class="err" id="eName"><span class="en">Please enter your name.</span><span class="ar" lang="ar">يرجى إدخال اسمك.</span></p></div>
+        <div class="fld" data-f="email"><label for="cEmail"><span class="en">Email</span><span class="ar" lang="ar">البريد الإلكتروني</span></label><input id="cEmail" name="email" type="email" autocomplete="email" inputmode="email" dir="ltr" aria-describedby="eEmail"><p class="err" id="eEmail"><span class="en">Enter a valid email address, like name@example.com.</span><span class="ar" lang="ar">أدخل بريدًا إلكترونيًا صحيحًا مثل name@example.com.</span></p></div>
+        <div class="fld" data-f="topic"><label for="cTopic"><span class="en">What is this about?</span><span class="ar" lang="ar">موضوع الرسالة</span></label>
+          <select id="cTopic" name="topic" aria-describedby="eTopic"><option value=""></option><option value="role" data-en="A job opportunity" data-ar="فرصة وظيفية"></option><option value="project" data-en="A project or consulting" data-ar="مشروع أو استشارة"></option><option value="collab" data-en="Collaboration or content" data-ar="تعاون أو محتوى"></option><option value="other" data-en="Something else" data-ar="شيء آخر"></option></select>
+          <p class="err" id="eTopic"><span class="en">Choose a topic so I can route your message.</span><span class="ar" lang="ar">اختر موضوعًا لأتمكن من توجيه رسالتك.</span></p></div>
+        <div class="fld" data-f="msg"><label for="cMsg"><span class="en">Message</span><span class="ar" lang="ar">الرسالة</span></label><textarea id="cMsg" name="message" aria-describedby="eMsg"></textarea><p class="err" id="eMsg"><span class="en">Write at least 20 characters.</span><span class="ar" lang="ar">اكتب 20 حرفًا على الأقل.</span></p></div>
+        <div class="hp" aria-hidden="true"><label>Website <input tabindex="-1" autocomplete="off" name="website"></label></div>
+        <p class="note"><span class="en">Planned spam protection: a hidden honeypot field, a minimum-time check and Cloudflare Turnstile.</span><span class="ar" lang="ar">الحماية المخطط لها من الرسائل المزعجة: حقل مخفي وفحص زمن أدنى وCloudflare Turnstile.</span></p>
+        <div><button class="btn" type="submit" id="cBtn"><span class="en">Send message</span><span class="ar" lang="ar">أرسل الرسالة</span></button></div>
+        <div class="status" id="cstatus" role="status" aria-live="polite" tabindex="-1"></div>
+        <div class="proto-ctl"><label><input type="checkbox" id="simErr"> <span>Prototype control: simulate a server error on submit</span></label></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════ ADMIN (prototype of the future Sanity Studio) ═════════════ -->
+<div class="view" id="v-admin" dir="ltr" lang="en" data-title-en="Admin (prototype) — Taher Fawaz" data-title-ar="الإدارة (نموذج) — طاهر فواز">
+  <div class="adm-banner"><div class="wrap"><h1 tabindex="-1" style="font:600 20px var(--f-ui);display:inline">Content Studio</h1> <span class="chip ph" style="margin-inline:8px">Visual prototype</span> <span class="muted">Illustrates the planned Sanity Studio at <span class="mono">/studio</span>. No login, nothing is saved, nothing is published.</span></div></div>
+  <div class="wrap">
+    <div class="adm">
+      <nav class="adm-nav" aria-label="Content types" id="admNav"></nav>
+      <div class="adm-list" id="admList"></div>
+      <div class="adm-ed" id="admEd"></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>© <span class="en">Taher Fawaz. Design prototype.</span><span class="ar" lang="ar">طاهر فواز. نموذج تصميمي.</span> · <a href="#/admin" style="color:inherit">Admin (prototype)</a></span>
+    <span class="legend">
+      <span class="chip cv"><span class="en">From CV</span><span class="ar" lang="ar">من السيرة</span></span><span class="en">taken from the CV</span><span class="ar" lang="ar">مأخوذ من السيرة الذاتية</span>
+      <span class="chip draft"><span class="en">Draft</span><span class="ar" lang="ar">مسودة</span></span><span class="en">to review</span><span class="ar" lang="ar">للمراجعة</span>
+      <span class="chip ph"><span class="en">Placeholder</span><span class="ar" lang="ar">مؤقت</span></span><span class="en">replace later</span><span class="ar" lang="ar">يُستبدل لاحقًا</span>
+    </span>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.9 5.7 3.9 9s-1.3 6.3-3.9 9c-2.6-2.7-3.9-5.7-3.9-9S9.4 5.7 12 3z"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M9 6.5v11l9-5.5z" fill="currentColor"/></symbol>
+</svg>
+
+<script>
+(function(){
+'use strict';
+/* ───────── helpers ───────── */
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var root=document.documentElement;
+var store={get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+function T(en,ar){return '<span class="en">'+en+'</span><span class="ar" lang="ar">'+ar+'</span>'}
+var lang=store.get('tf-lang')==='ar'?'ar':'en';
+function L(en,ar){return lang==='ar'?ar:en}
+
+/* ───────── sample data (illustrative, not real content) ───────── */
+var CATS={mobile:['Mobile Engineering','هندسة الموبايل'],arch:['Software Architecture','معمارية البرمجيات'],real:['Real-World Engineering','هندسة من الواقع']};
+var ARTICLES=[
+ {slug:'split-large-flutter-app',cat:'arch',date:'2026-10-12',min:8,en:true,t:['How to split a large Flutter app without it turning into a mess','كيف أقسّم تطبيق Flutter كبير دون أن يتحول إلى فوضى؟'],x:['Sample excerpt: layers, boundaries and what to decide first.','مقتطف تجريبي: الطبقات والحدود وما يجب حسمه أولًا.']},
+ {slug:'swiftui-for-flutter-developers',cat:'mobile',date:'2026-09-28',min:6,en:false,t:[null,'SwiftUI لمطوّر Flutter: ما الذي يتشابه وما الذي يختلف؟'],x:[null,'مقتطف تجريبي: مقارنة أولية بين نموذجَي بناء الواجهات.']},
+ {slug:'bloc-or-riverpod',cat:'arch',date:'2026-09-10',min:7,en:true,t:['Bloc or Riverpod? An engineering decision, not a tool war','Bloc أم Riverpod؟ قرار هندسي لا معركة أدوات'],x:['Sample excerpt: how to choose with constraints, not with tribes.','مقتطف تجريبي: كيف نختار بناءً على القيود لا على الانتماءات.']},
+ {slug:'offline-first-mobile',cat:'real',date:'2026-08-21',min:9,en:false,t:[null,'عندما يفشل الطلب: تصميم تجربة offline-first لتطبيق موبايل'],x:[null,'مقتطف تجريبي: التخزين المؤقت وإعادة المحاولة وما بينهما من قرارات.']}
+];
+var VIDEOS=[
+ {k:'video',t:['Clean Architecture in Flutter, with a practical example','شرح Clean Architecture في Flutter بمثال عملي']},
+ {k:'video',t:['Bloc from scratch','Bloc من الصفر']},
+ {k:'short',t:['Keep business logic out of the Widget','لا تضع منطق الأعمال داخل الـ Widget']},
+ {k:'short',t:['Provider or Bloc? In one minute','Provider أم Bloc؟ في دقيقة']},
+ {k:'short',t:['What does offline-first mean?','ما معنى offline-first؟']}
+];
+var EXP=[
+ {d:'Jul 2025 – Now',co:'e& Egypt (Etisalat)',role:['Senior Flutter Developer','مطوّر Flutter أول'],w:['Cairo · Hybrid','القاهرة · هجين'],ok:true,hl:[['Contributed to My Etisalat, one of the largest telecom self-care apps in Egypt, with millions of active users.','ساهم في My Etisalat، أحد أكبر تطبيقات الخدمة الذاتية للاتصالات في مصر، بملايين المستخدمين النشطين.'],['Clean, modular code with Flutter, Clean Architecture and Bloc; secure payment integrations including Etisalat Cash.','كود نظيف موزّع على وحدات باستخدام Flutter والمعمارية النظيفة وBloc؛ وتكاملات دفع آمنة منها Etisalat Cash.']]},
+ {d:'Jun 2024 – Jul 2025',co:'NTG Clarity Co.',role:['Senior Flutter Developer','مطوّر Flutter أول'],w:['Cairo · Hybrid','القاهرة · هجين'],ok:true,hl:[['Built multiple mobile apps across industries with responsive, reusable UI components.','بناء عدة تطبيقات موبايل في مجالات مختلفة بمكوّنات واجهة متجاوبة وقابلة لإعادة الاستخدام.'],['Integrated complex REST APIs, optimised performance on Android and iOS, joined architecture decisions and code reviews.','ربط واجهات REST معقدة، وتحسين الأداء على أندرويد وiOS، والمشاركة في قرارات المعمارية ومراجعات الكود.']]},
+ {d:'Mar 2023 – Mar 2024',co:'School of Research & Science',role:['Senior Flutter Developer','مطوّر Flutter أول'],w:['Dubai, UAE · On-site','دبي، الإمارات · في المقر'],ok:true,hl:[['Led front-end development of an e-book library app, improving the reading experience, UI consistency and UX flows.','قاد تطوير الواجهة الأمامية لتطبيق مكتبة كتب إلكترونية، مع تحسين تجربة القراءة واتساق الواجهة وتدفقات الاستخدام.'],['Integrated external APIs and improved performance on large content datasets.','ربط واجهات خارجية وتحسين الأداء مع مجموعات محتوى كبيرة.']]},
+ {d:'Nov 2022 – Mar 2023',co:'Agile Technologies',role:['Mobile Apps Developer','مطوّر تطبيقات موبايل'],w:['Maadi, Cairo · On-site','المعادي، القاهرة · في المقر'],ok:true,hl:[['Contributed to Sanad, Jordan’s official government services app: secure modules, better UI/UX flows, compliance with government security standards.','ساهم في تطبيق سند، تطبيق الخدمات الحكومية الرسمي في الأردن: وحدات آمنة وتدفقات أفضل والتزام بمعايير الأمن الحكومية.'],['Integrated Firebase for analytics, notifications and real-time updates.','دمج Firebase للتحليلات والإشعارات والتحديثات الفورية.']]},
+ {d:'Jan 2022 – Nov 2022',co:'Flairstech',role:['Mobile Apps Developer','مطوّر تطبيقات موبايل'],w:['Maadi, Cairo · Hybrid','المعادي، القاهرة · هجين'],ok:false,hl:[['Worked on more than four apps across industries, including Flairstech Hub, Gasco, Gasco Delivery and Outout.','عمل على أكثر من أربعة تطبيقات في صناعات مختلفة، منها Flairstech Hub وGasco وGasco Delivery وOutout.'],['Built robust UI components, improved stability, shipped frequent releases and gave post-launch support.','بنى مكوّنات واجهة قوية، وحسّن الاستقرار، وأصدر تحديثات متكررة، وقدّم دعمًا بعد الإطلاق.']]},
+ {d:'Dec 2020 – Dec 2021',co:'VA Computing',role:['Mobile Apps Developer','مطوّر تطبيقات موبايل'],w:['5th Settlement, Cairo · Remote','التجمع الخامس، القاهرة · عن بُعد'],ok:false,hl:[['Developed the SafeToNet parent-child safety app with Flutter in a Scrum environment.','طوّر تطبيق SafeToNet لسلامة الأطفال والأهل باستخدام Flutter في بيئة Scrum.'],['Integrated mobile apps with AI models; improved AI-based features, app security and content-filtering modules.','ربط التطبيقات بنماذج ذكاء اصطناعي؛ وتحسين الميزات المعتمدة على الذكاء الاصطناعي وأمان التطبيق ووحدات تصفية المحتوى.']]},
+ {d:'Nov 2019 – Jul 2020',co:'Active Interactions',role:['Frontend Developer','مطوّر واجهات أمامية'],w:['Kuala Lumpur, Malaysia · On-site','كوالالمبور، ماليزيا · في المقر'],ok:false,hl:[['Developed and maintained web applications and internal tools; maintained live projects and contributed to game development initiatives.','طوّر وصان تطبيقات ويب وأدوات داخلية؛ وصان مشاريع قائمة وساهم في مبادرات تطوير ألعاب.']]},
+ {d:'Feb 2019 – Nov 2019',co:'Utopia CO-living',role:['Frontend Developer','مطوّر واجهات أمامية'],w:['Kuala Lumpur, Malaysia · On-site','كوالالمبور، ماليزيا · في المقر'],ok:false,hl:[['Responsible for the website’s UI design on the Wix CMS platform and managed its content.','مسؤول عن تصميم واجهة الموقع على منصة Wix CMS وإدارة محتواه.']]}
+];
+
+/* ───────── render: dynamic lists ───────── */
+function chipConfirm(){return ' <span class="chip confirm">'+T('Confirm','للتأكيد')+'</span>'}
+function ledgerRow(e,full){
+  var hl=full?'<ul class="hl">'+e.hl.map(function(h){return '<li>'+T(h[0],h[1])+'</li>'}).join('')+'</ul>':'';
+  return '<li><span class="dates mono">'+e.d+(e.ok?'':chipConfirm())+'</span><div><h3>'+e.co+'</h3><span class="role-t">'+T(e.role[0],e.role[1])+'</span>'+hl+'</div><span class="where">'+T(e.w[0],e.w[1])+'</span></li>';
+}
+function artRow(a){
+  var title=a.en?T(a.t[0],a.t[1]):'<span class="ar-block" dir="rtl" lang="ar">'+a.t[1]+'</span>';
+  var ex=a.en?'<p class="ex">'+T(a.x[0],a.x[1])+'</p>':'<p class="ex ar-block" dir="rtl" lang="ar" style="font-weight:400">'+a.x[1]+'</p>';
+  var badge=a.en?'<span class="chip cv" style="color:var(--link)">AR · EN</span>':'<span class="chip cv">'+T('Arabic only','بالعربية فقط')+'</span>';
+  return '<li><a href="#/blog/'+a.slug+'"><span class="d mono">'+a.date+'</span><div><h3>'+title+'</h3>'+ex+'<div class="meta"><span>'+T(CATS[a.cat][0],CATS[a.cat][1])+'</span><span>'+T(a.min+' min read',a.min+' دقائق للقراءة')+'</span>'+badge+'<span class="chip draft">'+T('Sample','تجريبي')+'</span></div></div></a></li>';
+}
+function vidItem(v,i){
+  var cls=v.k==='short'?'short':'land';
+  var kind=v.k==='short'?T('YouTube Short','يوتيوب شورت'):T('YouTube video','فيديو يوتيوب');
+  return '<div class="vitem '+cls+'"><button type="button" class="vthumb" data-i="'+i+'" aria-label="Play sample: '+v.t[0]+'"><span class="play"><span><svg class="i" style="width:22px;height:22px"><use href="#i-play"/></svg></span></span><span class="cap"><span>'+kind+'</span><span>'+T('Sample','تجريبي')+'</span></span><span class="loaded-msg"><b>'+T('Embed placeholder','مكان التضمين')+'</b><span>'+T('In production the original YouTube URL loads here (youtube-nocookie), only after this click.','في النسخة الفعلية يُحمَّل رابط يوتيوب الأصلي هنا (youtube-nocookie) بعد هذه النقرة فقط.')+'</span></span></button><p class="vtitle">'+T(v.t[0],v.t[1])+'</p><p class="vmeta">'+kind+' <span class="mono">youtu.be/[id]</span></p></div>';
+}
+function bindVideos(scope){$$('.vthumb',scope).forEach(function(b){b.onclick=function(){b.classList.add('loaded')}})}
+
+function renderStatic(){
+  $('#homeLedger').innerHTML=EXP.slice(0,4).map(function(e){return ledgerRow(e,false)}).join('');
+  $('#expLedger').innerHTML=EXP.map(function(e){return ledgerRow(e,true)}).join('');
+  $('#homeArticles').innerHTML=ARTICLES.slice(0,3).map(artRow).join('');
+  var hv=$('#homeVideos'); hv.innerHTML=[0,2,3].map(function(i){return vidItem(VIDEOS[i],i)}).join(''); bindVideos(hv);
+}
+
+/* blog list + filter */
+var blogCat='all';
+function renderBlog(){
+  var f=$('#blogFilters'), opts=[['all','All','الكل']].concat(Object.keys(CATS).map(function(k){return [k,CATS[k][0],CATS[k][1]]}));
+  f.innerHTML=opts.map(function(o){return '<button type="button" class="fbtn" data-c="'+o[0]+'" aria-pressed="'+(blogCat===o[0])+'">'+T(o[1],o[2])+'</button>'}).join('');
+  $$('.fbtn',f).forEach(function(b){b.onclick=function(){blogCat=b.dataset.c;renderBlog()}});
+  var list=ARTICLES.filter(function(a){return blogCat==='all'||a.cat===blogCat});
+  $('#blogList').innerHTML=list.map(artRow).join('');
+  $('#blogEmpty').hidden=list.length>0;
+}
+/* video list + filter */
+var vidKind='all';
+function renderVideos(){
+  var f=$('#vidFilters'), opts=[['all','All','الكل'],['video','Videos','فيديوهات'],['short','Shorts','شورتس']];
+  f.innerHTML=opts.map(function(o){return '<button type="button" class="fbtn" data-k="'+o[0]+'" aria-pressed="'+(vidKind===o[0])+'">'+T(o[1],o[2])+'</button>'}).join('');
+  $$('.fbtn',f).forEach(function(b){b.onclick=function(){vidKind=b.dataset.k;renderVideos()}});
+  var g=$('#vidGrid'); g.innerHTML=VIDEOS.map(function(v,i){return (vidKind==='all'||v.k===vidKind)?vidItem(v,i):''}).join(''); bindVideos(g);
+}
+
+/* article detail */
+var artState={slug:null,lang:'ar'};
+var BODY={
+ ar:'<p>نص تجريبي لعرض تخطيط القراءة. سيُكتب المقال النهائي داخل لوحة التحرير، وهذا النص لا يحمل أي معلومة تقنية حقيقية.</p><h2>عنوان فرعي تجريبي</h2><p>الفقرات في اللغة العربية تحتاج إلى ارتفاع سطر أكبر وحجم خط مريح، مع عرض عمود لا يتجاوز نحو 65 حرفًا للحفاظ على سهولة القراءة.</p><pre><code>// illustrative snippet — code stays left-to-right\nabstract class AccountRepository {\n  Future&lt;Balance&gt; fetchBalance();\n}</code></pre><blockquote>اقتباس تجريبي يوضح شكل الجمل المميزة داخل المقال.</blockquote><p>يمكن للمقال أن يربط بمشروع أو فيديو ذي صلة، كما يظهر أسفل الصفحة.</p>',
+ en:'<p>Sample text to show the reading layout. The final article will be written in the CMS; this text carries no real technical claim.</p><h2>Sample subheading</h2><p>Body text uses a comfortable measure of roughly 68 characters so long-form reading stays easy on both desktop and mobile.</p><pre><code>// illustrative snippet\nabstract class AccountRepository {\n  Future&lt;Balance&gt; fetchBalance();\n}</code></pre><blockquote>A sample pull quote showing how emphasis is handled inside an article.</blockquote><p>An article can link to a related project or video, shown below the text.</p>'
+};
+function renderArticle(slug){
+  var a=ARTICLES.filter(function(x){return x.slug===slug})[0]||ARTICLES[0];
+  if(artState.slug!==a.slug){artState.slug=a.slug;artState.lang=(lang==='en'&&a.en)?'en':'ar'}
+  if(artState.lang==='en'&&!a.en)artState.lang='ar';
+  var isAr=artState.lang==='ar', h=$('#artTitle');
+  h.textContent=isAr?a.t[1]:a.t[0]; h.className=isAr?'rtl':''; h.dir=isAr?'rtl':'ltr'; h.lang=isAr?'ar':'en';
+  $('#artCat').innerHTML=T(CATS[a.cat][0],CATS[a.cat][1]);
+  $('#artDate').textContent=a.date; $('#artMin').innerHTML=T(a.min+' min read',a.min+' دقائق للقراءة');
+  var b=$('#artBody'); b.className='art-body '+(isAr?'ab-ar':'ab-en'); b.dir=isAr?'rtl':'ltr'; b.lang=isAr?'ar':'en'; b.innerHTML=BODY[isAr?'ar':'en'];
+  $('#alAr').setAttribute('aria-pressed',isAr); $('#alEn').setAttribute('aria-pressed',!isAr); $('#alEn').disabled=!a.en;
+  $('#artLangNote').innerHTML=a.en?T('English translation available.','تتوفر ترجمة إنجليزية.'):T('Arabic only — no English translation yet. This is normal and allowed.','بالعربية فقط — لا توجد ترجمة إنجليزية بعد. وهذا أمر طبيعي ومسموح.');
+  document.title=(isAr?a.t[1]:a.t[0])+' — '+L('Taher Fawaz','طاهر فواز');
+}
+$('#alAr').onclick=function(){artState.lang='ar';renderArticle(artState.slug)};
+$('#alEn').onclick=function(){artState.lang='en';renderArticle(artState.slug)};
+
+/* ───────── router ───────── */
+var VIEWS={'home':'v-home','about':'v-about','experience':'v-experience','projects':'v-projects','projects/sanad':'v-sanad','projects/my-etisalat':'v-etisalat','blog':'v-blog','videos':'v-videos','contact':'v-contact','admin':'v-admin'};
+var NAV={'v-sanad':'projects','v-etisalat':'projects','v-article':'blog'};
+var first=true, curId='v-home', curSlug=null, lastRoute=null;
+function route(forced){
+  var h=forced!=null?forced:((location.hash||'#/home').replace(/^#\/?/,'')||'home'), id, slug=null;
+  if(forced==null&&h===lastRoute)return; lastRoute=h;
+  if(h.indexOf('blog/')===0){id='v-article';slug=h.slice(5)} else id=VIEWS[h]||'v-home';
+  $$('.view').forEach(function(v){v.classList.remove('on')});
+  var v=document.getElementById(id); v.classList.add('on'); curId=id; curSlug=slug;
+  if(id==='v-article')renderArticle(slug);
+  var key=NAV[id]||id.replace('v-','');
+  $$('[data-nav]').forEach(function(a){if(a.dataset.nav===key)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  if(id!=='v-article')document.title=v.dataset['title'+(lang==='ar'?'Ar':'En')]||document.title;
+  $('#mnav').classList.remove('open'); $('#menuBtn').setAttribute('aria-expanded','false');
+  window.scrollTo(0,0);
+  if(!first){var t=$('h1',v); if(t){t.setAttribute('tabindex','-1'); t.focus({preventScroll:true})}}
+  first=false;
+}
+window.addEventListener('hashchange',function(){route()});
+/* in-page links: update the hash when allowed, and always route (works even where the hash cannot change, e.g. sandboxed previews) */
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('a[href^="#/"]'); if(!a||e.defaultPrevented||e.metaKey||e.ctrlKey||e.shiftKey)return;
+  e.preventDefault(); var href=a.getAttribute('href');
+  try{location.hash=href}catch(err){}
+  route(href.replace(/^#\/?/,'')||'home');
+});
+
+/* ───────── language, theme, menu ───────── */
+function applyLang(){
+  root.lang=lang; root.dir=lang==='ar'?'rtl':'ltr';
+  $('#v-admin').dir='ltr'; $('#v-admin').lang='en';
+  $$('select option[data-en]').forEach(function(o){o.textContent=L(o.dataset.en,o.dataset.ar)});
+  updateTheme();
+  $('#menuLbl').textContent=L('Menu','القائمة');
+  $('#orbit').setAttribute('aria-label',L('The three roles: Engineer, Educator, Builder','الأدوار الثلاثة: المهندس والمعلّم والصانع'));
+  var v=document.getElementById(curId); if(curId!=='v-article')document.title=v.dataset['title'+(lang==='ar'?'Ar':'En')]||document.title; else renderArticle(curSlug);
+  var st=$('#cstatus'); if(st.classList.contains('show')&&st.dataset.kind)showStatus(st.dataset.kind);
+}
+$('#langBtn').onclick=function(){lang=lang==='ar'?'en':'ar';store.set('tf-lang',lang);applyLang()};
+function updateTheme(){var d=root.dataset.theme==='dark',b=$('#themeBtn');b.setAttribute('aria-pressed',d);$('#themeLbl').textContent=d?L('Light theme','الوضع الفاتح'):L('Dark theme','الوضع الداكن');b.querySelector('use').setAttribute('href',d?'#i-sun':'#i-moon')}
+$('#themeBtn').onclick=function(){root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';store.set('tf-theme',root.dataset.theme);updateTheme()};
+$('#menuBtn').onclick=function(){var o=$('#mnav').classList.toggle('open');this.setAttribute('aria-expanded',o)};
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&$('#mnav').classList.contains('open')){$('#mnav').classList.remove('open');$('#menuBtn').setAttribute('aria-expanded','false');$('#menuBtn').focus()}});
+
+/* orbit ⇄ role list highlight */
+function setRole(r){$('#orbit').dataset.active=r||''}
+$$('[data-role]').forEach(function(el){['mouseenter','focusin'].forEach(function(ev){el.addEventListener(ev,function(){setRole(el.dataset.role)})});['mouseleave','focusout'].forEach(function(ev){el.addEventListener(ev,function(){setRole('')})})});
+
+/* ───────── contact form (client-side validation, simulated outcome) ───────── */
+var form=$('#cform'), cstatus=$('#cstatus');
+function showStatus(kind){
+  cstatus.dataset.kind=kind; cstatus.className='status show '+(kind==='ok'?'ok':'fail');
+  cstatus.innerHTML=kind==='ok'
+   ? '<b>'+T('Simulated success.','نجاح محاكى.')+'</b> '+T('No email was sent and nothing was stored. In production, this is where the confirmation appears.','لم يُرسل أي بريد ولم يُخزَّن أي شيء. في النسخة الفعلية يظهر التأكيد هنا.')
+   : '<b>'+T('Simulated error.','خطأ محاكى.')+'</b> '+T('The message could not be sent. Your text is still here — try again, or use the email address on this page.','تعذّر إرسال الرسالة. نصّك ما زال موجودًا — حاول مرة أخرى أو استخدم البريد المذكور في هذه الصفحة.');
+}
+function check(){
+  var v={name:form.name.value.trim(),email:form.email.value.trim(),topic:form.topic.value,msg:form.message.value.trim()};
+  var bad={name:v.name.length<2,email:!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.email),topic:!v.topic,msg:v.msg.length<20};
+  var map={name:'cName',email:'cEmail',topic:'cTopic',msg:'cMsg'}, firstBad=null;
+  Object.keys(bad).forEach(function(k){var f=$('[data-f="'+k+'"]'),inp=document.getElementById(map[k]);f.classList.toggle('bad',bad[k]);inp.setAttribute('aria-invalid',bad[k]);if(bad[k]&&!firstBad)firstBad=inp});
+  return firstBad;
+}
+form.addEventListener('submit',function(e){
+  e.preventDefault(); cstatus.className='status';
+  var fb=check(); if(fb){fb.focus();return}
+  var btn=$('#cBtn'); btn.disabled=true; btn.innerHTML=T('Sending (simulated)…','جارٍ الإرسال (محاكاة)…');
+  setTimeout(function(){btn.disabled=false;btn.innerHTML=T('Send message','أرسل الرسالة');var bad=$('#simErr').checked;showStatus(bad?'fail':'ok');cstatus.focus();if(!bad){form.reset();$$('.fld').forEach(function(f){f.classList.remove('bad')})}},900);
+});
+['cName','cEmail','cTopic','cMsg'].forEach(function(id){var el=document.getElementById(id);el.addEventListener('input',function(){var f=el.closest('.fld');if(f.classList.contains('bad'))check()})});
+
+/* ───────── admin prototype ───────── */
+var ADM={
+ articles:{label:'Articles',fields:[['title','Title','text',1],['slug','Slug','text'],['excerpt','Excerpt','textarea',1],['category','Category','select',['Mobile Engineering','Software Architecture','Real-World Engineering']],['published','Publish date','date'],['cover','Cover image','image'],['body','Body','rich',1],['video','Related video','select',['—','Clean Architecture in Flutter','Bloc from scratch']],['featured','Featured on Home','toggle']],
+  docs:[{t:['How to split a large Flutter app without it turning into a mess','كيف أقسّم تطبيق Flutter كبير دون أن يتحول إلى فوضى؟'],st:'pub',slug:'split-large-flutter-app',category:'Software Architecture',published:'2026-10-12',featured:true,hasEn:true},{t:['','SwiftUI لمطوّر Flutter: ما الذي يتشابه وما الذي يختلف؟'],st:'draft',slug:'swiftui-for-flutter-developers',category:'Mobile Engineering',published:'',featured:false,hasEn:false},{t:['Bloc or Riverpod? An engineering decision, not a tool war','Bloc أم Riverpod؟ قرار هندسي لا معركة أدوات'],st:'pub',slug:'bloc-or-riverpod',category:'Software Architecture',published:'2026-09-10',featured:true,hasEn:true}]},
+ projects:{label:'Projects',fields:[['title','Title','text'],['slug','Slug','text'],['summary','Summary','textarea',1],['role','Role','text',1],['stack','Stack (comma separated)','text'],['gallery','Screenshots','image'],['featured','Featured on Home','toggle']],
+  docs:[{t:['Sanad','سند'],st:'pub',slug:'sanad',summary:['The official government services gateway in Jordan.','البوابة الرسمية للخدمات الحكومية في الأردن.'],role:['Senior Flutter Developer','مطوّر Flutter أول'],stack:'Flutter, Clean Architecture, MVVM, DIO',featured:true},{t:['My Etisalat / My e&','My Etisalat / My e&'],st:'pub',slug:'my-etisalat',summary:['A large-scale self-care app for millions of users.','تطبيق خدمة ذاتية واسع النطاق يخدم ملايين المستخدمين.'],role:['Senior Flutter Developer','مطوّر Flutter أول'],stack:'Flutter, Bloc, Clean Architecture',featured:true}]},
+ experience:{label:'Experience',fields:[['employer','Employer','text'],['role','Role','text',1],['start','Start','date'],['end','End (empty = current)','date'],['mode','Work mode','select',['On-site','Hybrid','Remote']],['highlights','Highlights','textarea',1],['confirmed','Dates confirmed','toggle']],
+  docs:[{t:['e& Egypt (Etisalat)','e& مصر (اتصالات)'],st:'pub',employer:'e& Egypt (Etisalat)',role:['Senior Flutter Developer','مطوّر Flutter أول'],start:'2025-07-01',mode:'Hybrid',highlights:['Contributed to My Etisalat…','ساهم في My Etisalat…'],confirmed:true},{t:['Flairstech','Flairstech'],st:'draft',employer:'Flairstech',role:['Mobile Apps Developer','مطوّر تطبيقات موبايل'],start:'2022-01-01',end:'2022-11-01',mode:'Hybrid',highlights:['Worked on more than four apps…','عمل على أكثر من أربعة تطبيقات…'],confirmed:false}]},
+ videos:{label:'Videos',fields:[['url','YouTube URL','text'],['kind','Kind','select',['Video','Short']],['title','Title','text',1],['description','Description','textarea',1],['article','Related article','select',['—','How to split a large Flutter app…','Bloc or Riverpod?…']],['featured','Featured on Home','toggle']],
+  docs:[{t:['Clean Architecture in Flutter, with a practical example','شرح Clean Architecture في Flutter بمثال عملي'],st:'pub',url:'https://www.youtube.com/watch?v=[id]',kind:'Video',featured:true},{t:['Keep business logic out of the Widget','لا تضع منطق الأعمال داخل الـ Widget'],st:'draft',url:'https://www.youtube.com/shorts/[id]',kind:'Short',featured:true}]},
+ homepage:{label:'Homepage',fields:[['headline','Hero headline','text',1],['fp','Featured projects','multi',['Sanad','My Etisalat / My e&']],['fa','Featured articles','multi',['How to split a large Flutter app…','Bloc or Riverpod?…','Offline-first…']]],docs:[{t:['Homepage','الصفحة الرئيسية'],st:'pub',headline:['I build mobile apps at scale, then explain how they work.','أبني تطبيقات موبايل واسعة النطاق، ثم أشرح كيف تعمل.']}]},
+ settings:{label:'Site settings',fields:[['name','Name','text',1],['email','Public email (placeholder)','text'],['social','Social links','textarea']],docs:[{t:['Site settings','إعدادات الموقع'],st:'pub',name:['Taher Fawaz','طاهر فواز'],email:'hello@[your-domain]',social:'LinkedIn: [to be added]\nGitHub: [to be added]\nYouTube: [to be added]'}]}
+};
+var adm={type:'articles',doc:0,tab:'ar'};
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
+function renderAdmin(){
+  var nav=$('#admNav'); nav.innerHTML=Object.keys(ADM).map(function(k){return '<button type="button" data-k="'+k+'" aria-current="'+(adm.type===k)+'"><span>'+ADM[k].label+'</span><span class="muted">'+ADM[k].docs.length+'</span></button>'}).join('');
+  $$('button',nav).forEach(function(b){b.onclick=function(){adm.type=b.dataset.k;adm.doc=0;adm.tab='ar';renderAdmin()}});
+  var T0=ADM[adm.type];
+  $('#admList').innerHTML='<h2>'+T0.label+'</h2>'+T0.docs.map(function(d,i){return '<button type="button" data-i="'+i+'" aria-current="'+(adm.doc===i)+'"><span class="t" dir="auto">'+esc(d.t[0]||d.t[1])+'</span><span class="s"><span class="dot '+d.st+'"></span>'+(d.st==='pub'?'Published':'Draft')+'</span></button>'}).join('')+'<div style="padding:16px"><button type="button" id="admNew" class="tbtn" style="width:auto">+ New '+T0.label.replace(/s$/,'').toLowerCase()+'</button></div>';
+  $$('#admList [data-i]').forEach(function(b){b.onclick=function(){adm.doc=+b.dataset.i;adm.tab='ar';renderAdmin()}});
+  $('#admNew').onclick=function(){toast('Prototype only: a blank document would open here. Nothing is created.')};
+  renderEditor();
+}
+function fieldVal(d,key,l){var v=d[key];if(Array.isArray(v))return v[l==='ar'?1:0]||'';return v||''}
+function renderEditor(){
+  var T0=ADM[adm.type], d=T0.docs[adm.doc], ed=$('#admEd'), tr=T0.fields.some(function(f){return f[3]});
+  var tabs=tr?'<div class="seg" role="group" aria-label="Editing language"><button type="button" data-t="ar" aria-pressed="'+(adm.tab==='ar')+'">Arabic · required</button><button type="button" data-t="en" aria-pressed="'+(adm.tab==='en')+'">English · optional</button></div>':'';
+  var fields=T0.fields.map(function(f,ix){
+    var key=f[0],lab=f[1],type=f[2],loc=f[3],id='af'+ix, val=(type==='text'||type==='textarea'||type==='date')?fieldVal(d,key==='title'?'t':key,loc?adm.tab:'ar'):'';
+    if(key==='title')val=fieldVal(d,'t',adm.tab);
+    var rtl=loc&&adm.tab==='ar'?' class="rtl" dir="rtl"':'';
+    var tag=loc?' <span class="muted" style="font-weight:400">('+(adm.tab==='ar'?'Arabic':'English')+')</span>':'';
+    var hint=(loc&&adm.tab==='en'&&!val)?'<p class="fh">Not translated yet — the site will show the Arabic text.</p>':'';
+    if(type==='text')return '<div><label for="'+id+'">'+lab+tag+'</label><input type="text" id="'+id+'" data-key="'+key+'"'+rtl+' value="'+esc(val)+'">'+hint+'</div>';
+    if(type==='textarea')return '<div><label for="'+id+'">'+lab+tag+'</label><textarea id="'+id+'" data-key="'+key+'"'+rtl+'>'+esc(val)+'</textarea>'+hint+'</div>';
+    if(type==='date')return '<div><label for="'+id+'">'+lab+'</label><input type="date" id="'+id+'" value="'+esc(d[key]||'')+'"></div>';
+    if(type==='select')return '<div><label for="'+id+'">'+lab+'</label><select id="'+id+'">'+f[3].map(function(o){return '<option'+(o===d[key]?' selected':'')+'>'+esc(o)+'</option>'}).join('')+'</select></div>';
+    if(type==='toggle')return '<div class="tgl"><input type="checkbox" id="'+id+'"'+(d[key]?' checked':'')+'><label for="'+id+'" style="margin:0">'+lab+'</label></div>';
+    if(type==='image')return '<div><label>'+lab+'</label><div class="imgph">Drop an image here or browse · alt text per language · <i>prototype, no upload</i></div></div>';
+    if(type==='rich')return '<div><label>'+lab+tag+'</label><div class="rich"><div class="tb"><span>B</span><span>I</span><span>H2</span><span>Quote</span><span>Code</span><span>Image</span></div><div class="bd">Rich text editor (portable text) appears here.</div></div></div>';
+    if(type==='multi')return '<fieldset style="border:0;padding:0"><legend style="font-size:13px;font-weight:600;margin-bottom:6px">'+lab+'</legend>'+f[3].map(function(o,j){return '<label class="chk"><input type="checkbox"'+(j<2?' checked':'')+'> '+esc(o)+'</label>'}).join('')+'</fieldset>';
+    return '';
+  }).join('');
+  var shown=d.t[adm.tab==='ar'?1:0]||d.t[1];
+  ed.innerHTML='<div class="adm-top"><div class="l"><span class="dot '+d.st+'"></span><b>'+(d.st==='pub'?'Published':'Draft')+'</b>'+(adm.type==='articles'?' <span class="chip '+(d.hasEn?'cv':'ph')+'">'+(d.hasEn?'EN translation':'Arabic only')+'</span>':'')+'</div><div style="display:flex;gap:8px;flex-wrap:wrap">'+tabs+'<button type="button" class="tbtn" id="admSave">Save draft</button><button type="button" class="btn" id="admPub" style="min-height:44px">Publish</button></div></div><div class="adm-body"><div class="adm-fields">'+fields+'</div><aside class="pv"><h3>Live preview (illustrative)</h3><div class="card"><div class="ti" id="pvTitle" dir="auto">'+esc(shown)+'</div><p class="muted" style="font-size:13px;margin-top:6px">'+esc(adm.type==='articles'?(d.category||''):(d.stack||d.role&&d.role[0]||''))+'</p></div><p class="fh" style="margin-top:10px">Edits update this preview only. They are not stored.</p></aside></div>';
+  $$('[data-t]',ed).forEach(function(b){b.onclick=function(){adm.tab=b.dataset.t;renderEditor()}});
+  $('#admSave').onclick=function(){toast('Prototype only: nothing was saved.')};
+  $('#admPub').onclick=function(){toast('Prototype only: nothing was published. In Sanity, this would make the page live within seconds.')};
+  var ti=$('[data-key="title"]',ed); if(ti)ti.addEventListener('input',function(){$('#pvTitle').textContent=ti.value||'—'});
+}
+var toastT; function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show')},3800)}
+
+/* ───────── init ───────── */
+var th=store.get('tf-theme'); if(th==='dark'||th==='light')root.dataset.theme=th; else if(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)root.dataset.theme='dark';
+renderStatic(); renderBlog(); renderVideos(); renderAdmin(); applyLang(); route();
+})();
+</script>
+</body>
+</html>

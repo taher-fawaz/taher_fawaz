@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "chrome-devtools-mcp@latest"]
+    },
+    "Sanity": {
+      "type": "http",
+      "url": "https://mcp.sanity.io"
+    }
+  }
+}
