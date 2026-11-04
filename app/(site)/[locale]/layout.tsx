@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { notFound } from 'next/navigation'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import '../../globals.css'
 import { dirOf, isLocale, locales } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/dictionaries'
@@ -50,6 +52,9 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
         <Footer locale={locale} />
         <Buddy lines={d.game.buddy} />
         <AchievementToast heading={d.game.unlocked} items={d.game.ach as Record<AchievementId, [string, string]>} />
+        {/* Cookieless page views and Core Web Vitals; both only send data on Vercel deployments. */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )

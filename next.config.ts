@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
   // The site is one page now; old section URLs land on the matching part of the home page.
   async redirects() {
     return [
-      { source: '/:locale(en|ar)/projects/:path*', destination: '/:locale#work', permanent: true },
+      { source: '/:locale(en|ar)/projects', destination: '/:locale#work', permanent: true },
       { source: '/:locale(en|ar)/experience', destination: '/:locale#experience', permanent: true },
       { source: '/:locale(en|ar)/about', destination: '/:locale', permanent: true },
       { source: '/:locale(en|ar)/videos', destination: '/:locale#videos', permanent: true },

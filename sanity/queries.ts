@@ -33,7 +33,8 @@ const projectFields = `
   "id": _id, "slug": slug.current, title, summary, domain, role, period,
   "technologies": coalesce(technologies, []), "contributions": coalesce(contributions, []),
   "links": coalesce(links[]{label, url}, []), "featured": coalesce(featured, false),
-  "cover": cover${image}, "gallery": coalesce(gallery[]${image}, [])
+  "cover": cover${image}, "gallery": coalesce(gallery[]${image}, []),
+  "hasStory": defined(caseStudy.ar[0]) || defined(caseStudy.en[0])
 `
 export const projectsQuery = defineQuery(`*[_type == "project" && defined(slug.current)] | order(featured desc, order asc, _createdAt desc){ ${projectFields} }`)
 export const projectQuery = defineQuery(`*[_type == "project" && slug.current == $slug][0]{ ${projectFields}, "caseStudy": { "ar": ${rich('caseStudy.ar')}, "en": ${rich('caseStudy.en')} } }`)

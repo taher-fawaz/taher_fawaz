@@ -59,6 +59,8 @@ export type Project = {
   cover?: ImageAsset
   gallery: ImageAsset[]
   caseStudy?: LPT
+  /** True when the project has a written case study (its own page). */
+  hasStory?: boolean
 }
 
 export type Category = { slug: string; title: L; description?: L }

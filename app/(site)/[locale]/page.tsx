@@ -62,6 +62,7 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
     stack: p.technologies.slice(0, 5),
     cover: p.cover ? { url: p.cover.url, alt: tr(p.cover.alt, locale) } : undefined,
     links: p.links.filter((l) => l.label && l.url),
+    story: p.hasStory ? localePath(locale, `/projects/${p.slug}`) : undefined,
   }))
 
   // Oldest first, so the path reads as a journey toward today; each stop gets its own city landmark.
@@ -166,7 +167,7 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
         <section id="work" aria-labelledby="work-title" className="wrap pb-6 pt-20 md:pb-10 md:pt-28">
           <SectionTitle id="work-title" label={g.workLabel} title={g.workTitle} hint={g.workHint} />
           <div className="mt-12">
-            <ProjectCards cards={cards} labels={{ screenshot: g.screenshot, flip: g.flip, back: g.back, openOn: g.openOn, newTab: g.newTab }} />
+            <ProjectCards cards={cards} labels={{ screenshot: g.screenshot, flip: g.flip, back: g.back, openOn: g.openOn, newTab: g.newTab, readStory: d.projects.readStory }} />
           </div>
         </section>
       ) : null}
