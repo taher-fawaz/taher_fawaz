@@ -207,6 +207,10 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
             </li>
           ) : null}
         </ul>
+        {/* The link to every article sits with the articles, before the videos. */}
+        <p className="mt-5 flex justify-end">
+          <Link href={localePath(locale, '/blog')} className="tlink">{d.common.allArticles} <span aria-hidden="true" className="icon-fwd inline-block">→</span></Link>
+        </p>
         {videos.length ? (
           <div className="mt-10 grid grid-cols-2 items-start gap-x-4 gap-y-10 md:grid-cols-[minmax(0,32fr)_minmax(0,9fr)_minmax(0,9fr)] md:gap-x-6">
             {videos.map((v) => (
@@ -216,9 +220,6 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
             ))}
           </div>
         ) : null}
-        <p className="mt-8">
-          <Link href={localePath(locale, '/blog')} className="tlink">{d.common.allArticles} <span aria-hidden="true" className="icon-fwd inline-block">→</span></Link>
-        </p>
       </section>
 
       {/* Skills */}
