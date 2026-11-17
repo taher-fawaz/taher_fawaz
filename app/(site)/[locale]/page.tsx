@@ -15,7 +15,7 @@ import { Loadout, type LoadoutSkill } from '@/components/game/Loadout'
 import { VideoCard } from '@/components/content/VideoCard'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { Ltr } from '@/components/ui/primitives'
-import { ExternalIcon } from '@/components/ui/icons'
+import { SocialLinks } from '@/components/site/SocialLinks'
 
 // Card and cartridge colours cycle through the palette's light tints.
 const TINTS = ['#FF8A5C', '#7FA6FF', '#9FE0C4', '#FFD98A', '#D9C7FF', '#C9D2CF']
@@ -208,10 +208,6 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
             </li>
           ) : null}
         </ul>
-        {/* The link to every article sits with the articles, before the videos. */}
-        <p className="mt-5 flex justify-end">
-          <Link href={localePath(locale, '/blog')} className="tlink">{d.common.allArticles} <span aria-hidden="true" className="icon-fwd inline-block">→</span></Link>
-        </p>
         {videos.length ? (
           <div className="mt-10 grid grid-cols-2 items-start gap-x-4 gap-y-10 md:grid-cols-[minmax(0,32fr)_minmax(0,9fr)_minmax(0,9fr)] md:gap-x-6">
             {videos.map((v) => (
@@ -221,6 +217,9 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
             ))}
           </div>
         ) : null}
+        <p className="mt-8">
+          <Link href={localePath(locale, '/blog')} className="tlink">{d.common.allArticles} <span aria-hidden="true" className="icon-fwd inline-block">→</span></Link>
+        </p>
       </section>
 
       {/* Skills */}
@@ -238,15 +237,16 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
             <p className="mono text-[0.82rem]">{g.contactLabel}</p>
             <h2 id="contact-title" className="section-title mt-2.5">{g.contactTitle}</h2>
             <p className="mt-4 max-w-[34ch] text-[1.1rem]">{g.contactBody}</p>
-            <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
-              {settings.email ? <li><a href={`mailto:${settings.email}`} className="font-semibold underline underline-offset-4"><Ltr>{settings.email}</Ltr></a></li> : null}
-              {settings.socials.filter((s) => s.url).map((s) => (
-                <li key={s.platform}>
-                  <a href={s.url} target="_blank" rel="noopener noreferrer me" className="inline-flex items-center gap-1.5 font-semibold underline underline-offset-4"><Ltr>{s.platform}</Ltr><ExternalIcon size={15} /></a>
-                </li>
-              ))}
-            </ul>
+            {settings.email ? (
+              <p className="mt-6"><a href={`mailto:${settings.email}`} className="font-semibold underline underline-offset-4"><Ltr>{settings.email}</Ltr></a></p>
+            ) : null}
             <p className="mt-6 text-[0.92rem]">{d.contact.location}: {tr(settings.location, locale)}</p>
+            {settings.socials.some((s) => s.url) ? (
+              <>
+                <p className="mb-3 mt-8 font-semibold">{d.socials.follow}</p>
+                <SocialLinks socials={settings.socials} variant="cards" labels={{ ...d.socials, newTab: d.game.newTab }} />
+              </>
+            ) : null}
           </div>
           <div className="min-w-0 flex-[999_1_26rem]">
             <ContactForm

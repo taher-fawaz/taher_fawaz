@@ -26,7 +26,7 @@ export const siteSettings = defineType({
     defineField({
       name: 'socials', title: 'Social links', type: 'array', group: 'contact',
       of: [defineArrayMember({ type: 'object', fields: [
-        defineField({ name: 'platform', type: 'string', options: { list: ['LinkedIn', 'GitHub', 'YouTube', 'X', 'Medium'] }, validation: (r) => r.required() }),
+        defineField({ name: 'platform', type: 'string', options: { list: ['LinkedIn', 'YouTube', 'TikTok', 'Instagram', 'Facebook', 'GitHub', 'X', 'Medium'] }, validation: (r) => r.required() }),
         defineField({ name: 'url', type: 'url', validation: (r) => r.required().uri({ scheme: ['https'] }) }),
       ], preview: { select: { title: 'platform', subtitle: 'url' } } })],
     }),

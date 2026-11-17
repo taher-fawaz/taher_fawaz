@@ -78,6 +78,10 @@ const en = {
     },
   },
   footer: { rights: 'Taher Fawaz', builtWith: 'Built with Next.js and Sanity.' },
+  socials: {
+    label: 'Social profiles', follow: 'Or follow me here:', email: 'Email',
+    blurbs: { LinkedIn: 'Articles and posts', YouTube: 'Video tutorials', TikTok: 'Short reels', Instagram: 'Follow along', Facebook: 'Follow along', GitHub: 'Code', X: 'Quick notes', Medium: 'Articles' } as Record<string, string>,
+  },
 }
 
 export type Dictionary = typeof en
@@ -159,6 +163,10 @@ const ar: Dictionary = {
     },
   },
   footer: { rights: 'طاهر فواز', builtWith: 'بُني باستخدام Next.js وSanity.' },
+  socials: {
+    label: 'حساباتي على السوشيال ميديا', follow: 'أو تابعني هنا:', email: 'البريد الإلكتروني',
+    blurbs: { LinkedIn: 'مقالات وبوستات', YouTube: 'شروحات فيديو', TikTok: 'ريلز قصيرة', Instagram: 'تابعني', Facebook: 'تابعني', GitHub: 'الكود', X: 'ملاحظات سريعة', Medium: 'مقالات' } as Record<string, string>,
+  },
 }
 
 const dictionaries: Record<Locale, Dictionary> = { en, ar }
